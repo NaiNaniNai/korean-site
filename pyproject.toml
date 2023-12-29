@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "korean-site"
+version = "0.1.0"
+description = ""
+authors = ["NaiNaniNai <nail02-02@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0"
+environ = "^1.0"
+psycopg2 = "^2.9.9"
+django-migration-linter = "^5.0.0"
+pillow = "^10.1.0"
+django-environ = "^0.11.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.djlint]
+ignore="D018,H006"
