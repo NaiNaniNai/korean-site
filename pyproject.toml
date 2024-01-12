@@ -20,4 +20,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.djlint]
-ignore="D018,H006"
+ignore="D018,H006,H031"

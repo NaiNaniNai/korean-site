@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}
+    Регистрация
+{% endblock title %}
+{% block content %}
+    <section class="our-courses" id="courses">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading">
+                        {% if not user.is_authenticated %}
+                            <h1>Вход</h1>
+                            <h4>Добро пожаловать на наш сайт!</h4>
+                        {% else %}
+                            <h1>Вы уже авторизированы</h1>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if not user.is_authenticated %}
+                    <div class="col-lg-12">
+                        <div class="login__form">
+                            <form method="post" action="{% url "singin" %}">
+                                {% csrf_token %}
+                                <div class="input__item">
+                                    <input type="text"
+                                           name="username"
+                                           id="username"
+                                           placeholder="Имя пользователя">
+                                    <span class="icon_profile"></span>
+                                </div>
+                                <div class="input__item">
+                                    <input type="text" name="password" id="password" placeholder="Пароль">
+                                    <span class="icon_lock"></span>
+                                </div>
+                                <button type="submit" class="site-btn">Вход</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="logout text-center">
+                    <h3>Выйти из аккаунта?</h3>
+                    <a href="{% url 'logout' %}" class="primary-btn">Выйти</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock content %}
