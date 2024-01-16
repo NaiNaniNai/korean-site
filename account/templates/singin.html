@@ -1,36 +1,42 @@
 {% extends "base.html" %}
 {% block title %}
-    Регистрация
+    Авторизация
 {% endblock title %}
 {% block content %}
-    <section class="our-courses" id="courses">
+    <section class="singin">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 offset-lg-3">
-                    <div class="section-heading">
+                <div class="col-lg-6 offset-lg-3 text-center">
+                    <div class="title_text">
                         {% if not user.is_authenticated %}
-                            <h1>Вход</h1>
-                            <h4>Добро пожаловать на наш сайт!</h4>
+                            <h2>Вход</h2>
+                            <p>Добро пожаловать на наш сайт!</p>
                         {% else %}
-                            <h1>Вы уже авторизированы</h1>
+                            <h2>Вы уже авторизированы</h2>
                         {% endif %}
                     </div>
                 </div>
                 {% if not user.is_authenticated %}
                     <div class="col-lg-12">
-                        <div class="login__form">
+                        <div class="singin__form">
+                            <div class="title__singin__form">
+                                {% for message in messages %}<div class="message-{{ message.tags }}">{{ message }}</div>{% endfor %}
+                            </div>
                             <form method="post" action="{% url "singin" %}">
                                 {% csrf_token %}
                                 <div class="input__item">
+                                    <i class="fa-solid fa-user"></i>
                                     <input type="text"
                                            name="username"
                                            id="username"
                                            placeholder="Имя пользователя">
-                                    <span class="icon_profile"></span>
                                 </div>
                                 <div class="input__item">
+                                    <i class="fa-solid fa-lock"></i>
                                     <input type="text" name="password" id="password" placeholder="Пароль">
-                                    <span class="icon_lock"></span>
+                                    <div class="forget_password">
+                                        Забыли пароль? <a href="{% url 'reset_password' %}">Восстановить!</a>
+                                    </div>
                                 </div>
                                 <button type="submit" class="site-btn">Вход</button>
                             </form>

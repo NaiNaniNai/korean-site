@@ -8,7 +8,7 @@
                         <img src="{% static '/images/templatemo-eduwell.png' %}" alt="korean-site">
                     </a>
                     <ul class="nav">
-                        <li class="scroll-to-section">
+                        <li>
                             <a href="#top" class="active">Home</a>
                         </li>
                         <li class="scroll-to-section">
@@ -31,14 +31,44 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="scroll-to-section">
+                        <li>
                             <a href="#testimonials">Testimonials</a>
                         </li>
-                        <li class="scroll-to-section">
+                        <li>
                             <a href="#contact-section">Contact Us</a>
                         </li>
-                        <li class="scroll-to-section">
-                            <a href="#account">А</a>
+                        <li class="icon__profile">
+                            {% if not user.is_authenticated %}
+                                <a href="{% url 'singin' %}">
+                                    <svg width="35"
+                                         height="35"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" r="3" stroke-width="1.8" stroke-linecap="round" cy="10" stroke="#fafafa" />
+                                        <circle cx="12" cy="12" r="9" stroke="#fafafa" stroke-width="1.8" />
+                                        <path d="M18 18.7059C17.6461 17.6427 16.8662 16.7033 15.7814 16.0332C14.6966 15.3632 13.3674 15 12 15C10.6326 15 9.30341 15.3632 8.21858 16.0332C7.13375 16.7033 6.35391 17.6427 6 18.7059" stroke="#fafafa" stroke-width="1.8" stroke-linecap="round" />
+                                    </svg>
+                                </a>
+                            {% else %}
+                                {% if user.account.image %}
+                                    <a href="{% url 'account_detail' user.username %}">
+                                        <img src="{{ MEDIA_URL }}{{ user.account.image.url }}" alt="">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'account_detail' user.username %}">
+                                        <svg width="35"
+                                             height="35"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" r="3" stroke-width="1.8" stroke-linecap="round" cy="10" stroke="#fafafa" />
+                                            <circle cx="12" cy="12" r="9" stroke="#fafafa" stroke-width="1.8" />
+                                            <path d="M18 18.7059C17.6461 17.6427 16.8662 16.7033 15.7814 16.0332C14.6966 15.3632 13.3674 15 12 15C10.6326 15 9.30341 15.3632 8.21858 16.0332C7.13375 16.7033 6.35391 17.6427 6 18.7059" stroke="#fafafa" stroke-width="1.8" stroke-linecap="round" />
+                                        </svg>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         </li>
                     </ul>
                     <a class="menu-trigger">

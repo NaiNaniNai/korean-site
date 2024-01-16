@@ -7,4 +7,5 @@ from account.models import CustomUser
 class CustomUserAdmin(admin.ModelAdmin):
     """Model of Custom User in admins panel"""
 
-    list_display = ("username", "first_name", "last_name", "email")
+    list_display = ("id", "username", "email")
+    list_display_links = ("username",)

@@ -5,8 +5,11 @@ from django.db import models
 class CustomUser(AbstractUser):
     """Model of User"""
 
-    last_name = models.CharField(max_length=128, verbose_name="Фамилия")
-    first_name = models.CharField(max_length=128, verbose_name="Имя")
+    slug = models.CharField(
+        max_length=128, verbose_name="Слаг", unique=True, blank=True
+    )
+    slug = "231312"
+    email = models.EmailField(verbose_name="Почта", unique=True)
     avatar = models.ImageField(
         upload_to="avatars/",
         default="avatars/default_avatar.png",
@@ -25,4 +28,4 @@ class CustomUser(AbstractUser):
         verbose_name_plural = "Пользователи"
 
     def __str__(self):
-        return f"{self.username} ({self.first_name} {self.last_name})"
+        return f"{self.username})"
