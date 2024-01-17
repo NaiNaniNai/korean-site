@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django_migration_linter",
     "base",
     "account",
+    "course",
 ]
 
 MIDDLEWARE = [
