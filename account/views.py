@@ -7,6 +7,7 @@ from django.views.generic import FormView
 
 from account.forms import SingupForm
 from account.models import CustomUser
+from project_root.settings import BASE_DIR
 
 
 class TestView(View):
@@ -82,10 +83,60 @@ class ResetPasswordView(View):
 
 
 class ProfileView(View):
-    """Detail page of account"""
+    """Detail page of profile"""
 
-    def get(self, request, username):
-        profile = CustomUser.objects.filter(username=username).first()
-        context = {"profile": profile}
+    def get(self, request, user_slug):
+        profile = CustomUser.objects.filter(slug=user_slug).first()
+        follows = profile.following_user.all()
+        context = {"profile": profile, "follows": follows}
 
-        return render(request, "account.html", context)
+        return render(request, "profile.html", context)
+
+
+def handle_uploaded_file(f):
+
+    with open(f"{BASE_DIR}/media/avatars/{f.name}", "wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
+class EdirProfileView(View):
+    """Edit page of profile"""
+
+    def get(self, request, user_slug):
+        profile = CustomUser.objects.filter(slug=user_slug).first()
+        context = {
+            "profile": profile,
+        }
+
+        return render(request, "edit_profile.html", context)
+
+    def post(self, request, user_slug):
+        profile = CustomUser.objects.filter(slug=user_slug).first()
+        date_of_birth = profile.date_of_birth
+        last_name = profile.last_name
+        first_name = profile.first_name
+        avatar = profile.avatar
+        if request.POST.get("date_of_birth"):
+            date_of_birth = request.POST.get("date_of_birth")
+        if request.POST.get("last_name"):
+            last_name = request.POST.get("last_name")
+        if request.POST.get("first_name"):
+            first_name = request.POST.get("first_name")
+        if request.FILES.get("avatar"):
+            print("ass")
+            handle_uploaded_file(request.FILES["avatar"])
+            avatar = request.FILES["avatar"]
+        print(
+            f"Фамилия:{last_name}, Имя:{first_name}, Датарождения:{date_of_birth}, Аватар:{avatar}"
+        )
+        CustomUser.objects.update_or_create(
+            username=profile.username,
+            defaults={
+                "date_of_birth": date_of_birth,
+                "last_name": last_name,
+                "first_name": first_name,
+                "avatar": avatar,
+            },
+        )
+        return redirect(reverse("test"))
