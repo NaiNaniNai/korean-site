@@ -1,0 +1,226 @@
+.normal__breadcrumb__text {
+	margin-top: 75px;
+}
+
+.icon_profile {
+	font-family: FontAwesome;
+}
+
+
+.singup__form {
+	width: 500px;
+  	margin-left: auto;
+  	margin-right: auto;
+}
+
+.section {
+	margin-top: 2px !important;
+}
+
+.singup__form button {
+	margin: 10px auto 0;
+	display: block;
+	font-size: 12px;
+	color: #ffffff;
+	background: #a9d18e;
+	font-weight: 700;
+	border: none;
+	border-radius: 2px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 12px 30px;
+}
+
+.singup__form h5 {
+	margin-top: 15px;
+	text-align: center;
+}
+.singup__form a {
+	color: #a9d18e;
+}
+
+.input__item {
+	width: 500px;
+	display: block;
+}
+
+.input__item input{
+	width: 475px;
+	margin-bottom: 10px;
+}
+
+.input__item ::placeholder {
+	color: black;
+	font-size: 1.5em;
+	text-align:center;
+}
+
+section {
+  margin-top: 140px;
+}
+
+.signup {
+	margin-top: 17px;
+}
+
+.title_text h2 {
+	font-size: 48px;
+}
+
+.title_text p {
+	font-size: 16px;
+}
+
+.signup .login__form h5 {
+	font-size: 15px;
+	color: #ffffff;
+	margin-top: 36px;
+}
+
+.signup .login__form h5 a {
+	color: #e53637;
+	font-weight: 700;
+}
+
+.title__singup__form {
+	margin-left: auto;
+	margin-right: auto;
+	width: 370px;
+	text-align: center;
+}
+
+.singin__form {
+	margin-top: 17px;
+	width: 500px;
+  	margin-left: auto;
+  	margin-right: auto;
+}
+
+.singin__form button {
+	margin: 10px auto 0;
+	display: block;
+	font-size: 12px;
+	color: #ffffff;
+	background: #a9d18e;
+	font-weight: 700;
+	border: none;
+	border-radius: 2px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 12px 30px;
+}
+
+.forget_password {
+	text-align: center;
+}
+
+.forget_password a:hover {
+	color: #0a53be !important;
+	text-decoration: underline !important;
+}
+
+.title__singin__form {
+	text-align: center;
+
+	font-size: 20px;
+}
+
+.message-error {
+	color: #e53637
+}
+
+.message-success {
+	color: #a9d18e;
+}
+
+.message-error-singup {
+	color: red;
+	display: block;
+}
+
+.icon__profile {
+	padding-left: 0 !important;
+	max-width: 45px;
+}
+
+/*---------------------
+  Profile Detail
+-----------------------*/
+
+.profile_detail {
+	margin-top: 100px;
+	padding-left: 200px;
+}
+
+.profile_detail__title {
+	display: inline-flex;
+}
+
+.profile_detail__icon {
+	height: auto;
+	width: auto;
+	max-height: 152px;
+	max-width: 152px;
+}
+
+.profile_detail__text {
+	margin-left: 20px;
+}
+
+.profile_detail__text a{
+	margin-top:10px;
+	color: black !important;
+}
+
+.profile_detail__text a:hover {
+	color: #a9d18e !important;
+}
+
+.profile_detail__link__text {
+	padding-top:20px;
+}
+
+.another_profile_detail {
+	margin-top: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding-right: 75px;
+}
+
+/*---------------------
+  Edit profile
+-----------------------*/
+
+.profile_detail_edit {
+	margin-top: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.profile_detail_edit__form {
+	text-align: center;
+	width: 500px;
+  	margin-left: auto;
+  	margin-right: auto;
+}
+
+.profile_detail__edit input {
+	width: 400px;
+	display: inline-flex;
+}
+
+.profile_detail_edit__form button {
+	margin: 10px auto 0;
+	display: block;
+	font-size: 12px;
+	color: #ffffff;
+	background: #a9d18e;
+	font-weight: 700;
+	border: none;
+	border-radius: 2px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 12px 30px;
+}

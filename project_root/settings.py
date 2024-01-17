@@ -15,6 +15,7 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
+AUTH_USER_MODEL = "account.CustomUser"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,6 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_migration_linter",
+    "base",
     "account",
 ]
 

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}
+    |Регистрация
+{% endblock title %}
+{% block content %}
+    <section class="normal-breadcrumb set-bg"
+             data-setbg="img/normal-breadcrumb.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="title_text">
+                        <h2>Регистрация</h2>
+                        {% if not user.is_authenticated %}
+                            <p>Добро пожаловать на наш сайт.</p>
+                        {% else %}
+                            <p>Вы уже авторизированы</p>
+                            <a href="{% url 'logout' %}">Выйти из аккаунта</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="signup spad">
+        {% if not user.is_authenticated %}
+            <div class="singup__form">
+                <div class="title__singup__form">
+                    {% for field in form %}
+                        <div class="message-error-singup">
+                            {% if field.errors %}{{ field.label_tag }}{{ field.errors.as_text }}{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input__item">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text"
+                               name="username"
+                               id="username"
+                               placeholder="Имя пользователя">
+                    </div>
+                    <div class="input__item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="text" name="email" id="email" placeholder="Электронный адрес">
+                        <span class="icon_profile"></span>
+                    </div>
+                    <div class="input__item">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="text" name="password1" id="password1" placeholder="Пароль">
+                        <span class="icon_lock"></span>
+                    </div>
+                    <div class="input__item">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="text"
+                               name="password2"
+                               id="password2"
+                               placeholder="Повторите пароль">
+                        <span class="icon_lock"></span>
+                    </div>
+                    <button type="submit" class="site-btn">Зарегистрироваться!</button>
+                </form>
+                <h5>
+                    Уже есть аккаунт? <a href="{% url 'singin' %}">Вход!</a>
+                </h5>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</section>
+{% endblock content %}

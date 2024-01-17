@@ -1,0 +1,81 @@
+{% load static %}
+<header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <a href="index.html" class="logo">
+                        <img src="{% static '/images/templatemo-eduwell.png' %}" alt="korean-site">
+                    </a>
+                    <ul class="nav">
+                        <li>
+                            <a href="#top" class="active">Home</a>
+                        </li>
+                        <li class="scroll-to-section">
+                            <a href="#services">Services</a>
+                        </li>
+                        <li class="scroll-to-section">
+                            <a href="#courses">Courses</a>
+                        </li>
+                        <li class="has-sub">
+                            <a href="">Pages</a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="about-us.html">About Us</a>
+                                </li>
+                                <li>
+                                    <a href="our-services.html">Our Services</a>
+                                </li>
+                                <li>
+                                    <a href="contact-us.html">Contact Us</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#testimonials">Testimonials</a>
+                        </li>
+                        <li>
+                            <a href="#contact-section">Contact Us</a>
+                        </li>
+                        <li class="icon__profile">
+                            {% if not user.is_authenticated %}
+                                <a href="{% url 'singin' %}">
+                                    <svg width="35"
+                                         height="35"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" r="3" stroke-width="1.8" stroke-linecap="round" cy="10" stroke="#fafafa" />
+                                        <circle cx="12" cy="12" r="9" stroke="#fafafa" stroke-width="1.8" />
+                                        <path d="M18 18.7059C17.6461 17.6427 16.8662 16.7033 15.7814 16.0332C14.6966 15.3632 13.3674 15 12 15C10.6326 15 9.30341 15.3632 8.21858 16.0332C7.13375 16.7033 6.35391 17.6427 6 18.7059" stroke="#fafafa" stroke-width="1.8" stroke-linecap="round" />
+                                    </svg>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'profile' user.slug %}">
+                                    {% if user.avatar %}
+                                        <img class="icon__profile"
+                                             src="{{ MEDIA_URL }}{{ user.avatar.url }}"
+                                             alt="">
+                                    {% else %}
+                                        <svg width="35"
+                                             height="35"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" r="3" stroke-width="1.8" stroke-linecap="round" cy="10" stroke="#fafafa" />
+                                            <circle cx="12" cy="12" r="9" stroke="#fafafa" stroke-width="1.8" />
+                                            <path d="M18 18.7059C17.6461 17.6427 16.8662 16.7033 15.7814 16.0332C14.6966 15.3632 13.3674 15 12 15C10.6326 15 9.30341 15.3632 8.21858 16.0332C7.13375 16.7033 6.35391 17.6427 6 18.7059" stroke="#fafafa" stroke-width="1.8" stroke-linecap="round" />
+                                        </svg>
+                                    {% endif %}
+                                </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <a class="menu-trigger">
+                        <span>Menu</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
