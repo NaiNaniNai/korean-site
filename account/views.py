@@ -50,7 +50,6 @@ class SingupView(FormView):
 
     def form_valid(self, form):
         form.save()
-        print(form)
         return super().form_valid(form)
 
 
@@ -124,12 +123,8 @@ class EdirProfileView(View):
         if request.POST.get("first_name"):
             first_name = request.POST.get("first_name")
         if request.FILES.get("avatar"):
-            print("ass")
             handle_uploaded_file(request.FILES["avatar"])
             avatar = request.FILES["avatar"]
-        print(
-            f"Фамилия:{last_name}, Имя:{first_name}, Датарождения:{date_of_birth}, Аватар:{avatar}"
-        )
         CustomUser.objects.update_or_create(
             username=profile.username,
             defaults={
