@@ -83,8 +83,11 @@ class Answer(models.Model):
     """Model of answer"""
 
     text = models.CharField(max_length=128, verbose_name="Текст ответа")
-    question = models.ManyToManyField(
-        Question, related_name="answers", verbose_name="Вопрос"
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        related_name="answers",
+        verbose_name="Вопрос",
     )
     is_correct = models.BooleanField(default=False)
 

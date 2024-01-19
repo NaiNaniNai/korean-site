@@ -1,7 +1,3 @@
-.normal__breadcrumb__text {
-	margin-top: 75px;
-}
-
 .icon_profile {
 	font-family: FontAwesome;
 }
@@ -115,8 +111,7 @@ section {
 }
 
 .forget_password a:hover {
-	color: #0a53be !important;
-	text-decoration: underline !important;
+	color: #a9d18e !important;
 }
 
 .title__singin__form {
@@ -228,4 +223,51 @@ section {
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	padding: 12px 30px;
+}
+
+/*---------------------
+  Course list
+-----------------------*/
+.course {
+	display: inline-flex;
+	border-radius: 20px;
+	background: red;
+	margin-bottom: 20px;
+}
+
+.course__info {
+	margin-left: 20px;
+	display: block;
+}
+
+.course__image {
+	width:200px;
+	height: 200px;
+}
+
+.course__image img {
+	width: auto;
+	height: auto;
+	max-width: 200px;
+	max-height: 200px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.course__level {
+	color: rgba(54, 48, 48, 0.7);
+	padding-bottom: 10px;
+}
+
+.course__title a {
+	margin-top: 10px;
+	color: black;
+}
+
+.course__title a:hover {
+	color: #a9d18e;
+}
+
+.course__price {
+	padding-top: 80px;
 }
