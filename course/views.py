@@ -1,14 +1,19 @@
-from django.shortcuts import render
-from django.views import View
+from django.views.generic import ListView, DetailView
 
-from .models import Exercise
+from .models import Course
 
 
-class TestView(View):
-    def get(self, request, slug):
-        test = Exercise.objects.filter(slug=slug).first()
-        context = {
-            "test": test,
-        }
+class CourseListView(ListView):
+    """List of courses"""
 
-        return render(request, "test.html", context)
+    model = Course
+    queryset = Course.objects.filter(is_draft=False)
+    template_name = "course_list.html"
+
+
+class CourseDetailView(DetailView):
+    """Detail of course"""
+
+    model = Course
+    slug_field = "slug"
+    template_name = "course_detail.html"

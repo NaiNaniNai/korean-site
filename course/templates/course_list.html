@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}
+    |Курсы
+{% endblock title %}
+{% block content %}
+    <section class="course_detail__title">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="title_text">
+                        <h1>Наши курсы</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="course_detail__info">
+        <div class="container">
+            <div class="row">
+                {% for course in course_list %}
+                    <div class="course">
+                        <div class="course__image">
+                            <img src="{{ MEDIA_URL }}{{ course.poster_for_main_page.url }}" alt="Упс">
+                        </div>
+                        <div class="course__info">
+                            <div class="course__level">
+                                <h5>{{ course.level }}</h5>
+                            </div>
+                            <div class="course__title">
+                                <a href="{% url "course_detail" course.slug %}">
+                                    <h2>{{ course.title }}</h2>
+                                </a>
+                            </div>
+                            <div class="course__price">
+                                <h4>{{ course.price }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock content %}
