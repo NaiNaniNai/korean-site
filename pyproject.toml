@@ -13,6 +13,7 @@ psycopg2 = "^2.9.9"
 django-migration-linter = "^5.0.0"
 pillow = "^10.1.0"
 django-environ = "^0.11.2"
+django-ckeditor = "^6.7.0"
 
 
 [build-system]
