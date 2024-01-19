@@ -10,6 +10,7 @@ class Course(models.Model):
     """Model of courses"""
 
     title = models.CharField(max_length=128, verbose_name="Название")
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
     level = models.CharField(
         max_length=128, choices=LEVEL_CHOICES, verbose_name="Уровень"
     )
@@ -26,13 +27,14 @@ class Course(models.Model):
         verbose_name_plural = "Курсы"
 
     def __str__(self):
-        return f"{self.type}-{self.title}"
+        return f"{self.level}-{self.title}"
 
 
 class Module(models.Model):
     """Model of module"""
 
     title = models.CharField(max_length=128, verbose_name="Название")
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
     course = models.ForeignKey(
         Course, on_delete=models.PROTECT, related_name="modules", verbose_name="Курсы"
     )
@@ -49,6 +51,7 @@ class Lesson(models.Model):
     """Model of lesson"""
 
     title = models.CharField(max_length=128, verbose_name="Название")
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
     number = models.CharField(max_length=64, verbose_name="Номер")
     description = models.CharField(max_length=128, verbose_name="Описание")
     module = models.ForeignKey(
@@ -73,7 +76,7 @@ class Question(models.Model):
         verbose_name_plural = "Вопросы"
 
     def __str__(self):
-        return f"{self.text}"
+        return self.text
 
 
 class Answer(models.Model):
@@ -86,8 +89,8 @@ class Answer(models.Model):
     is_correct = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = "Вопрос"
-        verbose_name_plural = "Вопросы"
+        verbose_name = "Ответ"
+        verbose_name_plural = "Ответы"
 
     def __str__(self):
         return f"{self.question}-{self.text}-{self.is_correct}"
@@ -97,6 +100,7 @@ class Exercise(models.Model):
     """Model of exercises"""
 
     title = models.CharField(max_length=128, verbose_name="Название")
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
     number = models.CharField(max_length=64, verbose_name="Номер")
     text = models.CharField(max_length=8192, verbose_name="Основной текст")
     audio = models.FileField(
@@ -109,10 +113,10 @@ class Exercise(models.Model):
         Lesson, on_delete=models.CASCADE, related_name="exercises", verbose_name="Урок"
     )
     question = models.ManyToManyField(
-        Question, related_name="exercises", verbose_name="Вопрос"
+        Question, related_name="exercises", blank=True, verbose_name="Вопрос"
     )
     answers = models.ManyToManyField(
-        Answer, related_name="exercises", verbose_name="Ответ"
+        Answer, related_name="exercises", blank=True, verbose_name="Ответ"
     )
 
     class Meta:
@@ -128,7 +132,7 @@ class Word(models.Model):
 
     russian_meaning = models.CharField(max_length=256, verbose_name="Русское значение")
     korean_meaning = models.CharField(max_length=256, verbose_name="Корейское значение")
-    transcription = models.CharField(max_length=256, verbose_name="Транскрипция")
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
 
     class Meta:
         verbose_name = "Слово"
@@ -141,6 +145,7 @@ class Word(models.Model):
 class DictionaryCourse(models.Model):
     """Model of dictionary of course"""
 
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
@@ -162,6 +167,7 @@ class DictionaryCourse(models.Model):
 class DictionaryLesson(models.Model):
     """Model of dictionary of lesson"""
 
+    slug = models.SlugField(max_length=128, verbose_name="Слаг")
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
