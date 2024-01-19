@@ -6,7 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView
 
 from account.forms import SingupForm
-from account.models import CustomUser
+from account.models import CustomUser, FollowingUsers
 from project_root.settings import BASE_DIR
 
 
@@ -85,9 +85,11 @@ class ProfileView(View):
     """Detail page of profile"""
 
     def get(self, request, user_slug):
+        user = request.user
         profile = CustomUser.objects.filter(slug=user_slug).first()
+        is_followed = user.following_user.filter(following_users_id=profile.id).first()
         follows = profile.following_user.all()
-        context = {"profile": profile, "follows": follows}
+        context = {"profile": profile, "follows": follows, "is_followed": is_followed}
 
         return render(request, "profile.html", context)
 
@@ -99,7 +101,7 @@ def handle_uploaded_file(f):
             destination.write(chunk)
 
 
-class EdirProfileView(View):
+class EditProfileView(View):
     """Edit page of profile"""
 
     def get(self, request, user_slug):
@@ -134,4 +136,23 @@ class EdirProfileView(View):
                 "avatar": avatar,
             },
         )
+        return redirect(reverse("test"))
+
+
+def get_following_user(request, profile_slug):
+    """Add following anime on user"""
+
+    if request.method == "GET":
+        followed_user = CustomUser.objects.filter(slug=profile_slug).first()
+        user = request.user
+        if FollowingUsers.objects.filter(
+            user_id=user.id, following_users_id=followed_user.id
+        ):
+            FollowingUsers.objects.filter(
+                user_id=user.id, following_users_id=followed_user.id
+            ).delete()
+        else:
+            FollowingUsers.objects.filter(user=user).create(
+                user_id=user.id, following_users_id=followed_user.id
+            )
         return redirect(reverse("test"))

@@ -141,6 +141,7 @@ section {
 .icon__profile {
 	padding-left: 0 !important;
 	max-width: 45px;
+	max-height: 50px;
 }
 
 /*---------------------
@@ -192,14 +193,18 @@ section {
   Edit profile
 -----------------------*/
 
-.profile_detail_edit {
+.edit_profile_detail {
 	margin-top: 100px;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
 }
 
-.profile_detail_edit__form {
+.edit_profile_detail__title {
+	display: inline-flex;
+}
+
+.edit_profile_detail__form {
 	text-align: center;
 	width: 500px;
   	margin-left: auto;
