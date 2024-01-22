@@ -231,7 +231,7 @@ section {
 .course {
 	display: inline-flex;
 	border-radius: 20px;
-	background: red;
+	background: #a9d18e;
 	margin-bottom: 20px;
 }
 
@@ -270,4 +270,68 @@ section {
 
 .course__price {
 	padding-top: 80px;
+}
+
+/*---------------------
+  Course detail
+-----------------------*/
+
+.course_detail {
+	margin-top: 8%;
+}
+
+.course_detail__info {
+	display: block;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.course_detail__image {
+	background: #a9d18e;
+	border-radius: 2.5em;
+	width: 100%;
+	height: 40%;
+	display: flex;
+	justify-content: center;
+}
+
+.course_detail__image img{
+	height: auto;
+	width: auto;
+	max-width: 100%;
+	max-height: 100%;
+	align-self:center;
+}
+
+.course_detail__text {
+	margin-top: 2%;
+	display:block;
+	text-align: center;
+}
+
+.course_detail__description {
+	margin-top: 1%;
+	text-align: left;
+}
+
+/*---------------------
+  Course passing
+-----------------------*/
+
+.course_passing_main {
+	margin-top: 1%;
+	text-align: left;
+}
+
+.course_passing_module {
+	margin-bottom: 2%;
+}
+
+.course_passing_module_lesson__title a {
+	margin-top: 10px;
+	color: black;
+}
+
+.course_passing_module_lesson__title a:hover {
+	color: #a9d18e;
 }

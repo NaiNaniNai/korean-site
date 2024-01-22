@@ -3,34 +3,24 @@
     |{{ course.title }}
 {% endblock title %}
 {% block content %}
-    <section class="courses__title">
+    <section class="course_detail">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="title_text">
-                        <h1>{{ course.title }}</h1>
+                <div class="course_detail__info">
+                    <div class="course_detail__image">
+                        <img src="{{ MEDIA_URL }}{{ course.poster.url }}" alt="">
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="courses__detail">
-        <div class="container">
-            <div class="row">
-                <div class="course">
-                    <div class="course__image">
-                        <img src="{{ MEDIA_URL }}{{ course.poster_for_main_page.url }}" alt="Упс">
-                    </div>
-                    <div class="course__info">
-                        <div class="course__level">
+                    <div class="course_detail__text">
+                        <div class="course_detail__level">
                             <h5>{{ course.level }}</h5>
                         </div>
-                        <div class="course__title">
-                            <a href="google.com">
-                                <h2>{{ course.title }}</h2>
-                            </a>
+                        <div class="course_detail__title">
+                            <h1>{{ course.title }}</h1>
                         </div>
-                        <div class="course__price">
+                        <div class="course_detail__description">
+                            <h4>{{ course.description|safe }}</h4>
+                        </div>
+                        <div class="course_detail__price">
                             <h4>{{ course.price }}</h4>
                         </div>
                     </div>
