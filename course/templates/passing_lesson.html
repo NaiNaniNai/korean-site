@@ -39,7 +39,7 @@
                             <div class="lesson_plan_theory_part_exercises">
                                 {% for exercise in theory_part.exercises.all %}
                                     <div class="lesson_plan_part_exercise__title">
-                                        <a href="#exercise_theory_{{ exercise.number }}">{{ exercise.title }}</a>
+                                        <a href="#exercise_theory_{{ exercise.number }}">{{ exercise.number }}.{{ exercise.title }}</a>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -70,30 +70,84 @@
                         <div class="exercises_theory">
                             {% for exercise in theory_part.exercises.all %}
                                 <div class="exercise_theory" id="exercise_theory_{{ exercise.number }}">
-                                    <div class="exercise_theory__title">
-                                        <h2>{{ exercise.title }}</h2>
+                                    <div class="exercise__title">
+                                        <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
                                     </div>
-                                    <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                    <div class="exercise__body">
+                                        <div class="exercise__video">
+                                            {% if exercise.video %}
+                                                <h5>Посмотрите видеозапись</h5>
+                                                <video controls="controls">
+                                                    <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
+                                                </video>
+                                            {% endif %}
+                                        </div>
+                                        <div class="exercise__audio">
+                                            {% if exercise.audio %}
+                                                <h5>Послушайте аудиозапись</h5>
+                                                <audio controls="controls">
+                                                    <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
+                                                </audio>
+                                            {% endif %}
+                                        </div>
+                                        <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
                         <div class="exercises_practical">
                             {% for exercise in practical_part.exercises.all %}
                                 <div class="exercise_practical">
-                                    <div class="exercise_practical__title">
-                                        <h2>{{ exercise.title }}</h2>
+                                    <div class="exercise__title">
+                                        <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
                                     </div>
-                                    <div class="exercise_practical__text">{{ exercise.text|safe }}</div>
+                                    <div class="exercise__body">
+                                        <div class="exercise__video">
+                                            {% if exercise.video %}
+                                                <h5>Посмотрите видеозапись</h5>
+                                                <video controls="controls">
+                                                    <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
+                                                </video>
+                                            {% endif %}
+                                        </div>
+                                        <div class="exercise__audio">
+                                            {% if exercise.audio %}
+                                                <h5>Послушайте аудиозапись</h5>
+                                                <audio controls="controls">
+                                                    <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
+                                                </audio>
+                                            {% endif %}
+                                        </div>
+                                        <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
                         <div class="exercises_homework">
                             {% for exercise in homework_part.exercises.all %}
                                 <div class="exercise_homework">
-                                    <div class="exercise_homework__title">
+                                    <div class="exercise__title">
                                         <h2>{{ exercise.title }}</h2>
                                     </div>
-                                    <div class="exercise_homework__text">{{ exercise.text|safe }}</div>
+                                    <div class="exercise__body">
+                                        <div class="exercise__video">
+                                            {% if exercise.video %}
+                                                <h5>Посмотрите видеозапись</h5>
+                                                <video controls="controls">
+                                                    <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
+                                                </video>
+                                            {% endif %}
+                                        </div>
+                                        <div class="exercise__audio">
+                                            {% if exercise.audio %}
+                                                <h5>Послушайте аудиозапись</h5>
+                                                <audio controls="controls">
+                                                    <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
+                                                </audio>
+                                            {% endif %}
+                                        </div>
+                                        <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>

@@ -414,14 +414,20 @@ section {
 	display: none;
 }
 
-.exercise_theory__title {
+.exercise__title {
 	margin-bottom: 2%;
 }
 
-.exercise_practical__title {
+
+.exercise__video {
 	margin-bottom: 2%;
 }
 
-.exercise_homework__title {
+.exercise__audio {
 	margin-bottom: 2%;
+}
+
+.exercise__video video {
+	width: 50%;
+	height: 25%;
 }
