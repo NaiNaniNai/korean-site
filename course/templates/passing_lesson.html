@@ -17,39 +17,88 @@
             </div>
         </div>
     </section>
-    <section class="lesson_plan">
+    <section class="section-lesson">
         <div class="container">
             <div class="row">
-                <div class="lesson_plan__title">
-                    <h2>План урока:</h2>
-                </div>
-                <div class="lesson_plan_theory_part">
-                    <div class="lesson_plan_part_info">
-                        <div class="lesson_plan_part_info__title">
-                            <h4>{{ theory_part.title }}</h4>
+                <div class="lesson">
+                    <div class="lesson_plan">
+                        <div class="lesson_plan__title">
+                            <h2>План урока:</h2>
                         </div>
-                        <div class="lesson_plan_part_info__progress_bar">
-                            <h4>{{ theory_completed_exercises.count }}/{{ theory_part.exercises.count }}</h4>
-                        </div>
-                    </div>
-                    <div class="lesson_plan_theory_part_exercises">
-                        {% for exercise in theory_part.exercises.all %}
-                            <div class="lesson_plan_part_exercise__title">{{ exercise.title }}</div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% for part_of_lesson in parts_of_lesson_data %}
-                    <div class="lesson_plan_part">
-                        <div class="lesson_plan_part__title">
-                            <h4>{{ part_of_lesson.part_of_lesson.title }}</h4>
-                        </div>
-                        {% for exercise in part_of_lesson.part_of_lesson.exercises.all %}
-                            <div class="lesson_plan_part_exercise">
-                                <div class="lesson_plan_part_exercise__title">{{ exercise.title }}</div>
+                        <div class="lesson_plan_theory_part">
+                            <div class="lesson_plan_part_info">
+                                <div class="lesson_plan_part_info__title">
+                                    <button onclick="selectionPartOfLesson('exercises_{{ theory_part.slug }}')">
+                                        <h4>{{ theory_part.title }}</h4>
+                                    </button>
+                                </div>
+                                <div class="lesson_plan_part_info__progress_bar">
+                                    <h4>{{ theory_completed_exercises.count }}/{{ theory_part.exercises.count }}</h4>
+                                </div>
                             </div>
-                        {% endfor %}
+                            <div class="lesson_plan_theory_part_exercises">
+                                {% for exercise in theory_part.exercises.all %}
+                                    <div class="lesson_plan_part_exercise__title">
+                                        <a href="#exercise_theory_{{ exercise.number }}">{{ exercise.title }}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="lesson_plan_practical_part">
+                            <div class="lesson_plan_part_info">
+                                <div class="lesson_plan_part_info__title">
+                                    <button onclick="selectionPartOfLesson('exercises_{{ practical_part.slug }}')">
+                                        <h4>{{ practical_part.title }}</h4>
+                                    </button>
+                                </div>
+                                <div class="lesson_plan_part_info__progress_bar">
+                                    <h4>{{ practical_part_completed_exercises.count }}/{{ practical_part.exercises.count }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lesson_plan_homework_part">
+                            <div class="lesson_plan_part_info">
+                                <div class="lesson_plan_part_info__title">
+                                    <button onclick="selectionPartOfLesson('exercises_{{ homework_part.slug }}')">
+                                        <h4>{{ homework_part.title }}</h4>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                {% endfor %}
+                    <div class="exercises_list">
+                        <div class="exercises_theory">
+                            {% for exercise in theory_part.exercises.all %}
+                                <div class="exercise_theory" id="exercise_theory_{{ exercise.number }}">
+                                    <div class="exercise_theory__title">
+                                        <h2>{{ exercise.title }}</h2>
+                                    </div>
+                                    <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="exercises_practical">
+                            {% for exercise in practical_part.exercises.all %}
+                                <div class="exercise_practical">
+                                    <div class="exercise_practical__title">
+                                        <h2>{{ exercise.title }}</h2>
+                                    </div>
+                                    <div class="exercise_practical__text">{{ exercise.text|safe }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="exercises_homework">
+                            {% for exercise in homework_part.exercises.all %}
+                                <div class="exercise_homework">
+                                    <div class="exercise_homework__title">
+                                        <h2>{{ exercise.title }}</h2>
+                                    </div>
+                                    <div class="exercise_homework__text">{{ exercise.text|safe }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

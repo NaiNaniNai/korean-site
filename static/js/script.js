@@ -41,3 +41,16 @@ $('.main-menu, .responsive-menu, .scroll-to-section').on('click', 'a', function 
 $(window).scroll(function () {
   checkSection();
 });
+
+
+function selectionPartOfLesson(type) {
+    exercises_theory = document.querySelector(".exercises_theory");
+    exercises_practical = document.querySelector(".exercises_practical");
+    exercises_homework = document.querySelector(".exercises_homework");
+    exercises_theory.style.display = "none";
+    exercises_practical.style.display = "none";
+    exercises_homework.style.display = "none";
+    elem = document.querySelector('.'+ type)
+    elem.style.display = "block";
+
+}

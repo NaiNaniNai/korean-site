@@ -116,23 +116,27 @@ class PassingLessonView(View):
         theory_completed_exercises = ExerciseUser.objects.filter(
             user=user, exercise__part_of_lesson=theory_part, is_completed=True
         )
-        parts_of_lesson = lesson.parts_of_lesson.all().exclude(slug="theory")
-        parts_of_lesson_data = []
-        for part_of_lesson in parts_of_lesson:
-            completed_exercises = ExerciseUser.objects.filter(
-                user=user, exercise__part_of_lesson=part_of_lesson, is_completed=True
-            )
-            parts_of_lesson_data.append(
-                {
-                    "part_of_lesson": part_of_lesson,
-                    "completed_exercises": completed_exercises,
-                }
-            )
+        practical_part = PartOfLesson.objects.filter(
+            lesson=lesson, slug="practical"
+        ).first()
+        practical_part_completed_exercises = ExerciseUser.objects.filter(
+            user=user, exercise__part_of_lesson=practical_part, is_completed=True
+        )
+        homework_part = PartOfLesson.objects.filter(
+            lesson=lesson, slug="homework"
+        ).first()
+        homework_part_completed_exercises = ExerciseUser.objects.filter(
+            user=user, exercise__part_of_lesson=homework_part, is_completed=True
+        )
+
         context = {
             "lesson": lesson,
             "is_available": is_available,
             "theory_part": theory_part,
+            "practical_part": practical_part,
+            "homework_part": homework_part,
             "theory_completed_exercises": theory_completed_exercises,
-            "parts_of_lesson_data": parts_of_lesson_data,
+            "practical_part_completed_exercises": practical_part_completed_exercises,
+            "homework_part_completed_exercises": homework_part_completed_exercises,
         }
         return render(request, "passing_lesson.html", context)
