@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    |{{ course.title }}
+    |Прохождение курса "{{ course.title }}"
 {% endblock title %}
 {% block content %}
     <section class="course_detail">
@@ -16,7 +16,7 @@
                         </div>
                         <div class="course_detail__text">
                             <div class="course_detail__level">
-                                <h5>{{ course.level }}ssssssss</h5>
+                                <h5>{{ course.level }}</h5>
                             </div>
                             <div class="course_detail__title">
                                 <h1>{{ course.title }}</h1>
@@ -41,13 +41,15 @@
                                         {% for lesson in module_data.lessons_data %}
                                             <div class="course_passing_module_lesson">
                                                 <div class="course_passing_module_lesson__title">
-                                                    <a href="{{ lesson.lesson.slug }}">
+                                                    <a href="{% url "passing_lesson" course.slug module_data.module.slug lesson.lesson.slug %}">
                                                         <h4>{{ lesson.lesson.title }}</h4>
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="course_passing_module_lesson__passing_bar">
-                                                <p>Количество пройденных упражнений: {{ lesson.completed_exercises.count }}/{{ lesson.lesson.exercises.all.count }}</p>
+                                                <p>
+                                                    Количество пройденных частей урока: {{ lesson.completed_part.count }}/{{ lesson.lesson.parts_of_lesson.all.count }}
+                                                </p>
                                             </div>
                                             <div class="course_passing_module_lesson__text">{{ lesson.description }}</div>
                                         {% endfor %}

@@ -1,8 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic import ListView
 
-from .models import Course, CourseUser, LessonUser, ExerciseUser
+from .models import (
+    Course,
+    CourseUser,
+    LessonUser,
+    ExerciseUser,
+    Lesson,
+    PartOfLessonUser,
+    PartOfLesson,
+)
 
 
 class CourseListView(ListView):
@@ -39,15 +47,24 @@ class PassingCourseView(View):
     """Passing the course"""
 
     def get(self, request, course_slug):
-        course = Course.objects.prefetch_related("modules__lessons").get(
-            slug=course_slug
+        course = get_object_or_404(
+            Course.objects.prefetch_related("modules__lessons"), slug=course_slug
         )
         modules = course.modules.all()
         user = request.user
-        user_course = CourseUser.objects.filter(course=course, user=user).first()
         is_available = False
+
+        context = {
+            "is_avialable": is_available,
+        }
+
+        if not user.id:
+            return render(request, "passing_course.html", context)
+
+        user_course = CourseUser.objects.filter(course=course, user=user).first()
         if user_course:
-            is_available = user_course.is_available
+            is_available = True
+
         modules_data = []
         for module in modules:
             completed_lessons = LessonUser.objects.filter(
@@ -55,11 +72,11 @@ class PassingCourseView(View):
             )
             lessons_data = []
             for lesson in module.lessons.all():
-                completed_exercises = ExerciseUser.objects.filter(
-                    user=user, exercise__lesson=lesson, is_completed=True
+                completed_part = PartOfLessonUser.objects.filter(
+                    user=user, part_of_lesson__lesson=lesson, is_completed=True
                 )
                 lessons_data.append(
-                    {"lesson": lesson, "completed_exercises": completed_exercises}
+                    {"lesson": lesson, "completed_part": completed_part}
                 )
             modules_data.append(
                 {
@@ -76,3 +93,46 @@ class PassingCourseView(View):
             "modules_data": modules_data,
         }
         return render(request, "passing_course.html", context)
+
+
+class PassingLessonView(View):
+    """Passing the lesson"""
+
+    def get(self, request, course_slug, module_slug, lesson_slug):
+        course = Course.objects.prefetch_related("modules__lessons").get(
+            slug=course_slug
+        )
+        user = request.user
+        user_course = None
+        if user.id:
+            user_course = CourseUser.objects.filter(course=course, user=user).first()
+        is_available = False
+        if user_course:
+            is_available = user_course.is_available
+        lesson = Lesson.objects.filter(
+            module__course=course, module__slug=module_slug, slug=lesson_slug
+        ).first()
+        theory_part = PartOfLesson.objects.filter(lesson=lesson, slug="theory").first()
+        theory_completed_exercises = ExerciseUser.objects.filter(
+            user=user, exercise__part_of_lesson=theory_part, is_completed=True
+        )
+        parts_of_lesson = lesson.parts_of_lesson.all().exclude(slug="theory")
+        parts_of_lesson_data = []
+        for part_of_lesson in parts_of_lesson:
+            completed_exercises = ExerciseUser.objects.filter(
+                user=user, exercise__part_of_lesson=part_of_lesson, is_completed=True
+            )
+            parts_of_lesson_data.append(
+                {
+                    "part_of_lesson": part_of_lesson,
+                    "completed_exercises": completed_exercises,
+                }
+            )
+        context = {
+            "lesson": lesson,
+            "is_available": is_available,
+            "theory_part": theory_part,
+            "theory_completed_exercises": theory_completed_exercises,
+            "parts_of_lesson_data": parts_of_lesson_data,
+        }
+        return render(request, "passing_lesson.html", context)

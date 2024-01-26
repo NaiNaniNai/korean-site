@@ -335,3 +335,24 @@ section {
 .course_passing_module_lesson__title a:hover {
 	color: #a9d18e;
 }
+
+
+/*---------------------
+  Lesson passing
+-----------------------*/
+
+.lesson_title__title {
+	text-align: center;
+}
+
+.lesson_plan_part {
+	margin-bottom: 3%;
+}
+
+.lesson_plan_part_info {
+	display: inline-flex;
+}
+
+.lesson_plan_part_info__title {
+	margin-right: 1em;
+}

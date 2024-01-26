@@ -17,6 +17,8 @@ from course.models import (
     CourseUser,
     LessonUser,
     ExerciseUser,
+    PartOfLesson,
+    PartOfLessonUser,
 )
 
 
@@ -50,6 +52,11 @@ class ModuleAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PartOfLesson)
+class PartOfLessonAdmin(admin.ModelAdmin):
     pass
 
 
@@ -97,6 +104,11 @@ class CourseUserAdmin(admin.ModelAdmin):
 
 @admin.register(LessonUser)
 class LessonUserAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PartOfLessonUser)
+class PartOfLessonUserAdmin(admin.ModelAdmin):
     pass
 
 
