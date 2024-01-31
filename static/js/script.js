@@ -42,6 +42,17 @@ $(window).scroll(function () {
   checkSection();
 });
 
+//
+//$('lesson_plan_part_exercise__title').on('click', 'a', callbackHandler);
+//const scrollTopCoordinate = $("#header").offset().top - $(window).height()*0.02
+//$([document.documentElement, document.body]).animate({
+//scrollTop: scrollTopCoordinate
+//}, 2000);
+$("#test_1").click(callbackHandler);
+$([document.documentElement, document.body]).animate({
+scrollTop: scrollTopCoordinate
+}, 2000);
+const scrollTopCoordinate = $("#header").offset().top - $(window).height() * 0.02
 
 function selectionPartOfLesson(type) {
     exercises_theory = document.querySelector(".exercises_theory");
@@ -53,4 +64,14 @@ function selectionPartOfLesson(type) {
     elem = document.querySelector('.'+ type)
     elem.style.display = "block";
 
+}
+
+
+function selectionExercise(number) {
+    exercises_practical = document.querySelectorAll(".exercise_practical");
+    exercises_practical.forEach(elem => {
+        elem.style.display = "none";
+    })
+    element = document.getElementById(number);
+    element.style.display = "block";
 }

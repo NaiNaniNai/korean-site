@@ -121,7 +121,7 @@ class PassingLessonView(View):
         ).first()
         practical_part_completed_exercises = ExerciseUser.objects.filter(
             user=user, exercise__part_of_lesson=practical_part, is_completed=True
-        )
+        ).values_list("exercise", flat=True)
         homework_part = PartOfLesson.objects.filter(
             lesson=lesson, slug="homework"
         ).first()

@@ -398,7 +398,7 @@ section {
 }
 
 .exercises_list {
-	margin-left: 25%;
+	margin-left: 30em;
 	text-align: center;
 }
 
@@ -430,4 +430,28 @@ section {
 .exercise__video video {
 	width: 50%;
 	height: 25%;
+}
+
+.exercises_practical__list {
+	display: flex;
+}
+
+.exercise_practical__completed__link {
+	margin-right: 1em;
+}
+
+.exercise_practical__completed__link button {
+	background: #a9d18e;;
+}
+
+.exercise_practical__link {
+	margin-right: 1em;
+}
+
+.exercise_practical__link button {
+	background: grey;
+}
+
+.exercise_practical {
+	display: none;
 }

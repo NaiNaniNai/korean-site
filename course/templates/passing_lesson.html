@@ -39,7 +39,8 @@
                             <div class="lesson_plan_theory_part_exercises">
                                 {% for exercise in theory_part.exercises.all %}
                                     <div class="lesson_plan_part_exercise__title">
-                                        <a href="#exercise_theory_{{ exercise.number }}">{{ exercise.number }}.{{ exercise.title }}</a>
+                                        <a id="test_{{ exercise.number }}"
+                                           href="#exercise_theory_{{ exercise.number }}">{{ exercise.number }}.{{ exercise.title }}</a>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -96,8 +97,15 @@
                             {% endfor %}
                         </div>
                         <div class="exercises_practical">
+                            <div class="exercises_practical__list">
+                                {% for exercise in practical_part.exercises.all %}
+                                    <div class="exercise_practical{% if exercise.pk in practical_part_completed_exercises %}__completed{% endif %}__link">
+                                        <button onclick="selectionExercise({{ exercise.number }})">{{ exercise.number }}</button>
+                                    </div>
+                                {% endfor %}
+                            </div>
                             {% for exercise in practical_part.exercises.all %}
-                                <div class="exercise_practical">
+                                <div class="exercise_practical" id="{{ exercise.number }}">
                                     <div class="exercise__title">
                                         <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
                                     </div>
