@@ -106,6 +106,9 @@
                             </div>
                             {% for exercise in practical_part.exercises.all %}
                                 <div class="exercise_practical" id="{{ exercise.number }}">
+                                    <div class="exercise__message">
+                                        {% for message in messages %}<div class="message-{{ message.tags }}">{{ message }}</div>{% endfor %}
+                                    </div>
                                     <div class="exercise__title">
                                         <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
                                     </div>
@@ -127,6 +130,25 @@
                                             {% endif %}
                                         </div>
                                         <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                        {% for question in exercise.question.all %}
+                                            <div class="exercise__question">
+                                                <h4>{{ question.text }}</h4>
+                                            </div>
+                                            <form method="post"
+                                                  action="{% url "passing_lesson" course.slug module.slug lesson.slug %}">
+                                                {% csrf_token %}
+                                                <div class="exercise__answers">
+                                                    {% for answer in exercise.answers.all %}
+                                                        <div class="exercise__answer">
+                                                            <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+                                                            <input type="radio" name="answer_id" value="{{ answer.id }}">
+                                                            <label for="{{ answer.text }}">{{ answer.text }}</label>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <button type="submit">Отправить ответ</button>
+                                            </form>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -164,16 +186,4 @@
             </div>
         </div>
     </section>
-    {#    {% for part_of_lesson in parts_of_lesson_data %}#}
-    {#                            <h1>{{ part_of_lesson.part_of_lesson.title }}</h1>#}
-    {#                            <div></div>#}
-    {#                            Количество пройденных упражнений: {{ part_of_lesson.completed_exercises.count }}#}
-    {#                            <div></div>#}
-    {#                            {% for exercise in part_of_lesson.part_of_lesson.exercises.all %}#}
-    {#                                {{ exercise.title }}#}
-    {#                                {{ exercise.text|safe }}#}
-    {#                                <div></div>#}
-    {#                            {% endfor %}#}
-    {#                        {% endfor %}#}
-    {#                    {% endif %}#}
 {% endblock content %}

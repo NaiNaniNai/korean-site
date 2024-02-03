@@ -441,7 +441,7 @@ section {
 }
 
 .exercise_practical__completed__link button {
-	background: #a9d18e;;
+	background: #a9d18e;
 }
 
 .exercise_practical__link {
@@ -454,4 +454,21 @@ section {
 
 .exercise_practical {
 	display: none;
+}
+
+.exercise__answers {
+	margin-top: 2em;
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+}
+
+.exercise__answer {
+	margin-right: 5em;
+	justify-content: center;
+  	align-items: center;
+}
+
+.exercise__answer button {
+	background: #a9d18e;
 }

@@ -1,15 +1,20 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
 
 from .models import (
     Course,
+    Module,
     CourseUser,
     LessonUser,
     ExerciseUser,
     Lesson,
     PartOfLessonUser,
     PartOfLesson,
+    Answer,
+    Exercise,
 )
 
 
@@ -102,6 +107,7 @@ class PassingLessonView(View):
         course = Course.objects.prefetch_related("modules__lessons").get(
             slug=course_slug
         )
+        module = Module.objects.filter(slug=module_slug).first()
         user = request.user
         user_course = None
         if user.id:
@@ -130,6 +136,8 @@ class PassingLessonView(View):
         )
 
         context = {
+            "course": course,
+            "module": module,
             "lesson": lesson,
             "is_available": is_available,
             "theory_part": theory_part,
@@ -140,3 +148,57 @@ class PassingLessonView(View):
             "homework_part_completed_exercises": homework_part_completed_exercises,
         }
         return render(request, "passing_lesson.html", context)
+
+    def post(self, request, course_slug, module_slug, lesson_slug):
+        user = request.user
+        if request.POST.get("answer_id"):
+            answer_id = request.POST.get("answer_id", None)
+
+            if not answer_id:
+                messages.error(request, "Не дан ответ")
+                return redirect(
+                    reverse(
+                        "passing_lesson",
+                        kwargs={
+                            "course_slug": course_slug,
+                            "module_slug": module_slug,
+                            "lesson_slug": lesson_slug,
+                        },
+                    )
+                )
+
+            exercise_id = request.POST.get("exercise_id", None)
+            exercise = Exercise.objects.filter(id=exercise_id).first()
+            answer = Answer.objects.filter(id=answer_id).first()
+
+            if not answer.is_correct:
+                messages.error(request, "Неправильный ответ")
+                return redirect(
+                    reverse(
+                        "passing_lesson",
+                        kwargs={
+                            "course_slug": course_slug,
+                            "module_slug": module_slug,
+                            "lesson_slug": lesson_slug,
+                        },
+                    )
+                )
+
+            ExerciseUser.objects.update_or_create(
+                user=user,
+                exercise=exercise,
+                defaults={
+                    "is_completed": True,
+                },
+            )
+
+        return redirect(
+            reverse(
+                "passing_lesson",
+                kwargs={
+                    "course_slug": course_slug,
+                    "module_slug": module_slug,
+                    "lesson_slug": lesson_slug,
+                },
+            )
+        )
