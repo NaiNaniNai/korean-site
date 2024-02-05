@@ -17,12 +17,32 @@ from course.models import (
     CourseUser,
     LessonUser,
     ExerciseUser,
+    PartOfLesson,
+    PartOfLessonUser,
 )
+
+
+class ExerciseAdminForm(forms.ModelForm):
+    text = forms.CharField(label="Основной текст", widget=CKEditorUploadingWidget())
+
+    class Meta:
+        model = Exercise
+        fields = "__all__"
+
+
+class CourseAdminForm(forms.ModelForm):
+    description = forms.CharField(label="Описание", widget=CKEditorUploadingWidget())
+
+    class Meta:
+        model = Course
+        fields = "__all__"
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    pass
+    """Model Course in admin panel"""
+
+    form = CourseAdminForm
 
 
 @admin.register(Module)
@@ -32,6 +52,11 @@ class ModuleAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PartOfLesson)
+class PartOfLessonAdmin(admin.ModelAdmin):
     pass
 
 
@@ -48,14 +73,6 @@ class AnswerAdmin(admin.ModelAdmin):
 @admin.register(Word)
 class WordAdmin(admin.ModelAdmin):
     pass
-
-
-class ExerciseAdminForm(forms.ModelForm):
-    text = forms.CharField(label="Основной текст", widget=CKEditorUploadingWidget())
-
-    class Meta:
-        model = Exercise
-        fields = "__all__"
 
 
 @admin.register(Exercise)
@@ -87,6 +104,11 @@ class CourseUserAdmin(admin.ModelAdmin):
 
 @admin.register(LessonUser)
 class LessonUserAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PartOfLessonUser)
+class PartOfLessonUserAdmin(admin.ModelAdmin):
     pass
 
 

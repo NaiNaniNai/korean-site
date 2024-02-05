@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}
+    |Прохождение курса "{{ course.title }}"
+{% endblock title %}
+{% block content %}
+    <section class="course_detail">
+        <div class="container">
+            <div class="row">
+                <div class="course_detail__info">
+                    {% if not is_available %}
+                        <h1>Вам недоступен этот курс!</h1>
+                        <h3>Для получения доступа обратитесь к администрации.</h3>
+                    {% else %}
+                        <div class="course_detail__image">
+                            <img src="{{ MEDIA_URL }}{{ course.poster.url }}" alt="">
+                        </div>
+                        <div class="course_detail__text">
+                            <div class="course_detail__level">
+                                <h5>{{ course.level }}</h5>
+                            </div>
+                            <div class="course_detail__title">
+                                <h1>{{ course.title }}</h1>
+                            </div>
+                            <div class="course_detail__description">
+                                <h4>{{ course.description|safe }}</h4>
+                            </div>
+                            <div class="course_detail__price">
+                                <h4>{{ course.price }}</h4>
+                            </div>
+                        </div>
+                        <div class="course_passing_main">
+                            {% for module_data in modules_data %}
+                                <div class="course_passing_module">
+                                    <div class="course_passing_module__title">
+                                        <h2>{{ module_data.module.title }}</h2>
+                                    </div>
+                                    <div class="course_passing_module__passing_bar">
+                                        <p>
+                                            Количество пройденных уроков: {{ module_data.completed_lessons.count }}/{{ module_data.module.lessons.all.count }}
+                                        </p>
+                                        {% for lesson in module_data.lessons_data %}
+                                            <div class="course_passing_module_lesson">
+                                                <div class="course_passing_module_lesson__title">
+                                                    <a href="{% url "passing_lesson" course.slug module_data.module.slug lesson.lesson.slug %}">
+                                                        <h4>{{ lesson.lesson.title }}</h4>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="course_passing_module_lesson__passing_bar">
+                                                <p>
+                                                    Количество пройденных частей урока: {{ lesson.completed_part.count }}/{{ lesson.lesson.parts_of_lesson.all.count }}
+                                                </p>
+                                            </div>
+                                            <div class="course_passing_module_lesson__text">{{ lesson.description }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

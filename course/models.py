@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from course.choices import LEVEL_CHOICES
+from course.choices import LEVEL_CHOICES, PART_OF_LESSON, PART_OF_LESSON_SLUG
 
 User = get_user_model()
 
@@ -20,7 +20,7 @@ class Course(models.Model):
         upload_to="main_poster/", verbose_name="Постер на главной странице"
     )
     price = models.CharField(max_length=64, verbose_name="Цена")
-    is_draft = models.BooleanField(verbose_name="Черновик", default=False)
+    is_draft = models.BooleanField(default=False, verbose_name="Черновик")
 
     class Meta:
         verbose_name = "Курс"
@@ -66,6 +66,30 @@ class Lesson(models.Model):
         return f"{self.module}-{self.title}"
 
 
+class PartOfLesson(models.Model):
+    """Model of part of lesson"""
+
+    title = models.CharField(
+        max_length=128, choices=PART_OF_LESSON, verbose_name="Название"
+    )
+    slug = models.CharField(
+        max_length=128, choices=PART_OF_LESSON_SLUG, verbose_name="Слаг"
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name="parts_of_lesson",
+        verbose_name="Урок",
+    )
+
+    class Meta:
+        verbose_name = "Часть урока"
+        verbose_name_plural = "Части урока"
+
+    def __str__(self):
+        return f"{self.lesson}, {self.title}"
+
+
 class Question(models.Model):
     """Model of question"""
 
@@ -89,7 +113,7 @@ class Answer(models.Model):
         related_name="answers",
         verbose_name="Вопрос",
     )
-    is_correct = models.BooleanField(default=False)
+    is_correct = models.BooleanField(default=False, verbose_name="Правильный ответ")
 
     class Meta:
         verbose_name = "Ответ"
@@ -112,8 +136,11 @@ class Exercise(models.Model):
     video = models.FileField(
         upload_to="video/", blank=True, null=True, verbose_name="Видеозапись"
     )
-    lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, related_name="exercises", verbose_name="Урок"
+    part_of_lesson = models.ForeignKey(
+        PartOfLesson,
+        on_delete=models.CASCADE,
+        related_name="exercises",
+        verbose_name="Части урока",
     )
     question = models.ManyToManyField(
         Question, related_name="exercises", blank=True, verbose_name="Вопрос"
@@ -127,7 +154,7 @@ class Exercise(models.Model):
         verbose_name_plural = "Упражнения"
 
     def __str__(self):
-        return f"{self.lesson}-{self.number}-{self.title}"
+        return f"{self.part_of_lesson}-{self.number}-{self.title}"
 
 
 class Word(models.Model):
@@ -223,9 +250,9 @@ class CourseUser(models.Model):
         related_name="courses_user",
         verbose_name="Курс",
     )
-    is_available = models.BooleanField(verbose_name="Доступен ли", default=False)
+    is_available = models.BooleanField(default=False, verbose_name="Доступен ли")
     time_active = models.DateField(verbose_name="Срок действия доступа")
-    is_completed = models.BooleanField(verbose_name="Пройден ли", default=False)
+    is_completed = models.BooleanField(default=False, verbose_name="Пройден ли")
 
     class Meta:
         verbose_name = "Курс пользователя"
@@ -250,7 +277,7 @@ class LessonUser(models.Model):
         related_name="lessons_user",
         verbose_name="Урок",
     )
-    is_completed = models.BooleanField(verbose_name="Пройден ли", default=False)
+    is_completed = models.BooleanField(default=False, verbose_name="Пройден ли")
 
     class Meta:
         verbose_name = "Урок пользователя"
@@ -258,6 +285,31 @@ class LessonUser(models.Model):
 
     def __str__(self):
         return f"{self.user}-{self.lesson}-{self.is_completed}"
+
+
+class PartOfLessonUser(models.Model):
+    """Class of user's part of level"""
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="parts_of_lesson_user",
+        verbose_name="Пользователь",
+    )
+    part_of_lesson = models.ForeignKey(
+        PartOfLesson,
+        on_delete=models.CASCADE,
+        related_name="parts_of_lesson_user",
+        verbose_name="Части урока",
+    )
+    is_completed = models.BooleanField(default=False, verbose_name="Пройден ли")
+
+    class Meta:
+        verbose_name = "Части урока пользователя"
+        verbose_name_plural = "Части уроков пользователей"
+
+    def __str__(self):
+        return f"{self.user} {self.part_of_lesson} {self.is_completed}"
 
 
 class ExerciseUser(models.Model):
@@ -275,7 +327,7 @@ class ExerciseUser(models.Model):
         related_name="exercises_user",
         verbose_name="Упражнение",
     )
-    is_completed = models.BooleanField(verbose_name="Пройден ли", default=False)
+    is_completed = models.BooleanField(default=False, verbose_name="Пройден ли")
 
     class Meta:
         verbose_name = "Упражнение пользователя"

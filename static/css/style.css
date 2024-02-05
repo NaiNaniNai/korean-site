@@ -231,7 +231,7 @@ section {
 .course {
 	display: inline-flex;
 	border-radius: 20px;
-	background: red;
+	background: #a9d18e;
 	margin-bottom: 20px;
 }
 
@@ -270,4 +270,205 @@ section {
 
 .course__price {
 	padding-top: 80px;
+}
+
+/*---------------------
+  Course detail
+-----------------------*/
+
+.course_detail {
+	margin-top: 8%;
+}
+
+.course_detail__info {
+	display: block;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.course_detail__image {
+	background: #a9d18e;
+	border-radius: 2.5em;
+	width: 100%;
+	height: 40%;
+	display: flex;
+	justify-content: center;
+}
+
+.course_detail__image img{
+	height: auto;
+	width: auto;
+	max-width: 100%;
+	max-height: 100%;
+	align-self:center;
+}
+
+.course_detail__text {
+	margin-top: 2%;
+	display:block;
+	text-align: center;
+}
+
+.course_detail__description {
+	margin-top: 1%;
+	text-align: left;
+}
+
+/*---------------------
+  Course passing
+-----------------------*/
+
+.course_passing_main {
+	margin-top: 1%;
+	text-align: left;
+}
+
+.course_passing_module {
+	margin-bottom: 2%;
+}
+
+.course_passing_module_lesson__title a {
+	margin-top: 10px;
+	color: black;
+}
+
+.course_passing_module_lesson__title a:hover {
+	color: #a9d18e;
+}
+
+
+/*---------------------
+  Lesson passing
+-----------------------*/
+
+.lesson {
+	display: flex;
+}
+
+.lesson_plan {
+	position: fixed;
+	z-index: 10000000;
+	width: 25%;
+}
+
+
+.lesson_plan__title {
+	margin-bottom: 3%;
+}
+
+.lesson_title__title {
+	text-align: center;
+
+}
+
+.lesson_plan_part_exercise__title a{
+	color:black;
+}
+
+.lesson_plan_part_exercise__title a:hover{
+	color:#a9d18e;
+}
+
+.lesson_plan_theory_part {
+	margin-bottom: 3%;
+}
+
+.lesson_plan_part {
+	margin-bottom: 3%;
+}
+
+.lesson_plan_part_info {
+	display: inline-flex;
+}
+
+.lesson_plan_part_info__title {
+	margin-right: 1em;
+}
+
+.lesson_plan_part_info__title button {
+	outline: none;
+ 	border:none;
+	background: transparent;
+}
+
+.lesson_plan_part__title button {
+	outline: none;
+ 	border:none;
+	background: transparent
+}
+
+.exercises_list {
+	margin-left: 30em;
+	text-align: center;
+}
+
+.exercises_theory {
+	display: none;
+}
+
+.exercises_practical {
+	display: none;
+}
+
+.exercises_homework {
+	display: none;
+}
+
+.exercise__title {
+	margin-bottom: 2%;
+}
+
+
+.exercise__video {
+	margin-bottom: 2%;
+}
+
+.exercise__audio {
+	margin-bottom: 2%;
+}
+
+.exercise__video video {
+	width: 50%;
+	height: 25%;
+}
+
+.exercises_practical__list {
+	display: flex;
+}
+
+.exercise_practical__completed__link {
+	margin-right: 1em;
+}
+
+.exercise_practical__completed__link button {
+	background: #a9d18e;
+}
+
+.exercise_practical__link {
+	margin-right: 1em;
+}
+
+.exercise_practical__link button {
+	background: grey;
+}
+
+.exercise_practical {
+	display: none;
+}
+
+.exercise__answers {
+	margin-top: 2em;
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+}
+
+.exercise__answer {
+	margin-right: 5em;
+	justify-content: center;
+  	align-items: center;
+}
+
+.exercise__answer button {
+	background: #a9d18e;
 }
