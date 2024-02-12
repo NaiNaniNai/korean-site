@@ -7,6 +7,7 @@ from django.views.generic import FormView
 
 from account.forms import SingupForm
 from account.models import CustomUser, FollowingUsers
+from course.models import LessonUser, Lesson
 from project_root.settings import BASE_DIR
 
 
@@ -84,12 +85,45 @@ class ResetPasswordView(View):
 class ProfileView(View):
     """Detail page of profile"""
 
-    def get(self, request, user_slug):
+    def get(self, request, profile_slug):
         user = request.user
-        profile = CustomUser.objects.filter(slug=user_slug).first()
+        profile = CustomUser.objects.filter(slug=profile_slug).first()
+        is_authenticated = user.is_authenticated
+
+        context = {
+            "profile": profile,
+            "is_authenticated": is_authenticated,
+        }
+
+        if not is_authenticated:
+            return render(request, "profile.html", context)
+
         is_followed = user.following_user.filter(following_users_id=profile.id).first()
         follows = profile.following_user.all()
-        context = {"profile": profile, "follows": follows, "is_followed": is_followed}
+        available_courses = profile.courses_user.filter(is_available=True)
+        courses_data = []
+
+        for available_course in available_courses:
+            course = available_course.course
+            completed_lessons = LessonUser.objects.filter(
+                user=user, lesson__module__course=course
+            ).count()
+            lessons = Lesson.objects.filter(module__course=course).count()
+            courses_data.append(
+                {
+                    "course": course,
+                    "completed_lessons": completed_lessons,
+                    "lessons": lessons,
+                }
+            )
+
+        context = {
+            "profile": profile,
+            "follows": follows,
+            "is_authenticated": is_authenticated,
+            "is_followed": is_followed,
+            "courses_data": courses_data,
+        }
 
         return render(request, "profile.html", context)
 
@@ -104,16 +138,16 @@ def handle_uploaded_file(f):
 class EditProfileView(View):
     """Edit page of profile"""
 
-    def get(self, request, user_slug):
-        profile = CustomUser.objects.filter(slug=user_slug).first()
+    def get(self, request, profile_slug):
+        profile = CustomUser.objects.filter(slug=profile_slug).first()
         context = {
             "profile": profile,
         }
 
         return render(request, "edit_profile.html", context)
 
-    def post(self, request, user_slug):
-        profile = CustomUser.objects.filter(slug=user_slug).first()
+    def post(self, request, profile_slug):
+        profile = CustomUser.objects.filter(slug=profile_slug).first()
         date_of_birth = profile.date_of_birth
         last_name = profile.last_name
         first_name = profile.first_name
@@ -136,7 +170,7 @@ class EditProfileView(View):
                 "avatar": avatar,
             },
         )
-        return redirect(reverse("test"))
+        return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))
 
 
 def get_following_user(request, profile_slug):
@@ -145,14 +179,23 @@ def get_following_user(request, profile_slug):
     if request.method == "GET":
         followed_user = CustomUser.objects.filter(slug=profile_slug).first()
         user = request.user
+        if followed_user == user:
+            messages.error(request, "Вы не можете подписаться на самого себя!")
+            return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))
         if FollowingUsers.objects.filter(
             user_id=user.id, following_users_id=followed_user.id
         ):
             FollowingUsers.objects.filter(
                 user_id=user.id, following_users_id=followed_user.id
             ).delete()
+            messages.success(
+                request, f"Вы отписались от пользователя {followed_user.username}"
+            )
         else:
             FollowingUsers.objects.filter(user=user).create(
                 user_id=user.id, following_users_id=followed_user.id
             )
-        return redirect(reverse("test"))
+            messages.success(
+                request, f"Вы подписались на пользователя {followed_user.username}"
+            )
+        return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))
