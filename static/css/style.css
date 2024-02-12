@@ -198,6 +198,7 @@ section {
 	margin-bottom: 2em;
 	border-radius: 20px;
 	background: #a9d18e;
+	display: flex;
 }
 
 .profile_course_head {
@@ -213,6 +214,7 @@ section {
 .profile_course__title {
 	margin-left: 2em;
 }
+
 
 /*---------------------
   Edit profile

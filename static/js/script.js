@@ -1,5 +1,3 @@
-$('.nav li:first').addClass('active');
-
 var showSection = function showSection(section, isAnimate) {
   var
   direction = section.replace(/#/, ''),
@@ -15,44 +13,6 @@ var showSection = function showSection(section, isAnimate) {
   }
 
 };
-
-var checkSection = function checkSection() {
-  $('.section').each(function () {
-    var
-    $this = $(this),
-    topEdge = $this.offset().top - 80,
-    bottomEdge = topEdge + $this.height(),
-    wScroll = $(window).scrollTop();
-    if (topEdge < wScroll && bottomEdge > wScroll) {
-      var
-      currentId = $this.data('section'),
-      reqLink = $('a').filter('[href*=\\#' + currentId + ']');
-      reqLink.closest('li').addClass('active').
-      siblings().removeClass('active');
-    }
-  });
-};
-
-$('.main-menu, .responsive-menu, .scroll-to-section').on('click', 'a', function (e) {
-  e.preventDefault();
-  showSection($(this).attr('href'), true);
-});
-
-$(window).scroll(function () {
-  checkSection();
-});
-
-//
-//$('lesson_plan_part_exercise__title').on('click', 'a', callbackHandler);
-//const scrollTopCoordinate = $("#header").offset().top - $(window).height()*0.02
-//$([document.documentElement, document.body]).animate({
-//scrollTop: scrollTopCoordinate
-//}, 2000);
-$("#test_1").click(callbackHandler);
-$([document.documentElement, document.body]).animate({
-scrollTop: scrollTopCoordinate
-}, 2000);
-const scrollTopCoordinate = $("#header").offset().top - $(window).height() * 0.02
 
 function selectionPartOfLesson(type) {
     exercises_theory = document.querySelector(".exercises_theory");
@@ -74,4 +34,50 @@ function selectionExercise(number) {
     })
     element = document.getElementById(number);
     element.style.display = "block";
+}
+
+
+var startTime;
+startTimer();
+
+
+$(window).on("beforeunload", function() {
+    sendTimeToBackend();
+});
+
+function startTimer() {
+    startTime = new Date().getTime();
+}
+
+
+function sendTimeToBackend() {
+    var currentTime = new Date().getTime();
+    var onlineTime = Math.floor((currentTime - startTime) / 1000);
+    var csrftoken = getCookie("csrftoken");
+    $.ajax({
+        url: "/update_last_online/",
+        type: "POST",
+        data: {
+            "current_time": currentTime,
+            "online_time": onlineTime
+        },
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+    });
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

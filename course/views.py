@@ -30,10 +30,13 @@ class CourseDetailView(View):
     """Detail info of course"""
 
     def get(self, request, course_slug):
-        course = Course.objects.prefetch_related("modules__lessons").get(
-            slug=course_slug
+        course = (
+            Course.objects.filter(slug=course_slug)
+            .prefetch_related("modules", "modules__lessons")
+            .first()
         )
         modules = course.modules.all()
+
         lessons = []
         for module in modules:
             lessons += list(module.lessons.all())
@@ -53,7 +56,10 @@ class PassingCourseView(View):
 
     def get(self, request, course_slug):
         course = get_object_or_404(
-            Course.objects.prefetch_related("modules__lessons"), slug=course_slug
+            Course.objects.prefetch_related(
+                "modules", "modules__lessons", "modules__lessons__parts_of_lesson"
+            ),
+            slug=course_slug,
         )
         modules = course.modules.all()
         user = request.user
@@ -66,7 +72,11 @@ class PassingCourseView(View):
         if not user.id:
             return render(request, "passing_course.html", context)
 
-        user_course = CourseUser.objects.filter(course=course, user=user).first()
+        user_course = (
+            CourseUser.objects.filter(course=course, user=user)
+            .select_related("course", "user")
+            .first()
+        )
         if user_course:
             is_available = True
 

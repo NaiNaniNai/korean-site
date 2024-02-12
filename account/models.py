@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomUser(AbstractUser):
@@ -22,6 +25,27 @@ class CustomUser(AbstractUser):
     user_permissions = models.ManyToManyField(
         "auth.Permission", related_name="users", blank=True, verbose_name="Права"
     )
+    last_online = models.DateTimeField(
+        blank=True, null=True, verbose_name="Последне время онлайна"
+    )
+    last_interaction = models.DateTimeField(
+        blank=True, null=True, verbose_name="Последнее время взаимодействия"
+    )
+    time_online = models.IntegerField(
+        default=0, verbose_name="Время онлайна пользователя"
+    )
+
+    def is_online(self):
+        if self.last_online:
+            return (timezone.now() - self.last_online) < timezone.timedelta(minutes=15)
+        return False
+
+    def get_online_info(self):
+        if self.is_online():
+            return _("Онлайн")
+        if self.last_online:
+            return _("Последнее посещение: {}").format(naturaltime(self.last_online))
+        return _("Нет информации")
 
     class Meta:
         verbose_name = "Пользователя"
