@@ -1,13 +1,18 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.db import connection
+from django.db.models import Prefetch
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views import View
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView
 
 from account.forms import SingupForm
-from account.models import CustomUser, FollowingUsers
-from course.models import LessonUser, Lesson
+from account.models import CustomUser, FollowingUsers, OnlineUser
+from course.models import LessonUser, Lesson, CourseUser
 from project_root.settings import BASE_DIR
 
 
@@ -87,7 +92,22 @@ class ProfileView(View):
 
     def get(self, request, profile_slug):
         user = request.user
-        profile = CustomUser.objects.filter(slug=profile_slug).first()
+        profile = (
+            CustomUser.objects.prefetch_related(
+                Prefetch(
+                    "courses_user",
+                    queryset=CourseUser.objects.prefetch_related(
+                        "course",
+                        "course__modules",
+                        "course__modules__lessons",
+                    ).filter(is_available=True),
+                    to_attr="avaliable_courses",
+                ),
+                Prefetch("lessons_user", to_attr="completed_lessons"),
+            )
+            .filter(slug=profile_slug)
+            .first()
+        )
         is_authenticated = user.is_authenticated
 
         context = {
@@ -98,10 +118,27 @@ class ProfileView(View):
         if not is_authenticated:
             return render(request, "profile.html", context)
 
-        is_followed = user.following_user.filter(following_users_id=profile.id).first()
-        follows = profile.following_user.all()
-        available_courses = profile.courses_user.filter(is_available=True)
+        available_courses = profile.avaliable_courses
         courses_data = []
+        month = timezone.now().month
+        is_followed = FollowingUsers.objects.filter(user=user, following_users=profile)
+        with connection.cursor() as cursor:
+            query = f"""
+                select ou.user_id as profile_id, Sum(ou.time_online)
+                from account_followingusers as fu
+                join account_onlineuser as ou
+                on ou.user_id = fu.following_users_id
+                where fu.user_id = {profile.id} and extract (month from ou.date::date) = {month}
+                group by ou.user_id
+            """
+            cursor.execute(query)
+            online_follows_raws = cursor.fetchall()
+
+        online_follows = {}
+
+        for online_follow_raw in online_follows_raws:
+            user_id, time_online = online_follow_raw
+            online_follows[user_id] = time_online
 
         for available_course in available_courses:
             course = available_course.course
@@ -117,9 +154,20 @@ class ProfileView(View):
                 }
             )
 
+        month_online_profile = OnlineUser.objects.filter(
+            user=profile, date__month=month
+        )
+        days_online = {}
+
+        if month_online_profile:
+            for date_online in month_online_profile:
+                day_online = date_online.date.day
+                time_online = date_online.time_online
+                days_online[day_online] = time_online
         context = {
             "profile": profile,
-            "follows": follows,
+            # "follows": follows,
+            "days_online": json.dumps(days_online),
             "is_authenticated": is_authenticated,
             "is_followed": is_followed,
             "courses_data": courses_data,
@@ -129,7 +177,6 @@ class ProfileView(View):
 
 
 def handle_uploaded_file(f):
-
     with open(f"{BASE_DIR}/media/avatars/{f.name}", "wb+") as destination:
         for chunk in f.chunks():
             destination.write(chunk)

@@ -4,6 +4,7 @@
 {% endblock title %}
 {% block content %}
     {% load tz %}
+    {% load static %}
     <section class="profile__title">
         <div class="container">
             <div class="row">
@@ -19,71 +20,83 @@
         </div>
     </section>
     <section class="{% if profile.username != user.username %}another_{% endif %}profile_detail">
-        <div class="profile_detail__title">
-            <img class="profile_detail__icon"
-                 src="{{ MEDIA_URL }}{{ profile.avatar.url }}"
-                 alt="ups">
-            <div class="profile_detail__text">
-                <h2>Имя пользователя: {{ profile.username }}</h2>
-                {% localtime on %}
-                <h2>{{ profile.get_online_info }}</h2>
-            {% endlocaltime %}
-            {% if profile.last_name %}<h2>Фамилия: {{ profile.last_name }}</h2>{% endif %}
-            {% if profile.first_name %}<h2>Имя: {{ profile.first_name }}</h2>{% endif %}
-            {% if profile.date_of_birth %}<h2>Дата рождения: {{ profile.date_of_birth }}</h2>{% endif %}
-            {% if is_authenticated %}
-                {% if user.username == profile.username %}
-                    <a href="{% url 'edit_profile' profile.slug %}">
-                        <h5 class="profile_detail__link__text">Редактировать профиль</h5>
-                    </a>
-                    <a href="{% url 'logout' %}">
-                        <h6>Выйти из аккаунта</h6>
-                    </a>
-                {% else %}
-                    <a href="{% url 'follow' profile.slug %}">
-                        <h4 class="profile_detail__link__text">
-                            {% if is_followed %}
-                                Отписаться
-                            {% else %}
-                                Подписаться
-                            {% endif %}
-                        </h4>
-                    </a>
+        <div class="profile_detail_top">
+            <div class="profile_detail__title">
+                <img class="profile_detail__icon"
+                     src="{{ MEDIA_URL }}{{ profile.avatar.url }}"
+                     alt="ups">
+                <div class="profile_detail__text">
+                    <h2>Имя пользователя: {{ profile.username }}</h2>
+                    {% localtime on %}
+                    <h2>{{ profile.get_online_info }}</h2>
+                {% endlocaltime %}
+                {% if profile.last_name %}<h2>Фамилия: {{ profile.last_name }}</h2>{% endif %}
+                {% if profile.first_name %}<h2>Имя: {{ profile.first_name }}</h2>{% endif %}
+                {% if profile.date_of_birth %}<h2>Дата рождения: {{ profile.date_of_birth }}</h2>{% endif %}
+                {% if is_authenticated %}
+                    {% if user.username == profile.username %}
+                        <a href="{% url 'edit_profile' profile.slug %}">
+                            <h5 class="profile_detail__link__text">Редактировать профиль</h5>
+                        </a>
+                        <a href="{% url 'logout' %}">
+                            <h6>Выйти из аккаунта</h6>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'follow' profile.slug %}">
+                            <h4 class="profile_detail__link__text">
+                                {% if is_followed %}
+                                    Отписаться
+                                {% else %}
+                                    Подписаться
+                                {% endif %}
+                            </h4>
+                        </a>
+                    {% endif %}
                 {% endif %}
+            </div>
+        </div>
+        {% if is_authenticated %}
+            {% if user.username == profile.username %}
+                <div class="profile_courses">
+                    <div class="profile_courses__title">
+                        {% if not courses_data %}
+                            <h2>У вас нет доступных курсов</h2>
+                        {% else %}
+                            <h2>Доступные курсы:</h2>
+                        {% endif %}
+                    </div>
+                    {% for course_data in courses_data %}
+                        <div class="profile_course">
+                            <div class="profile_course_head">
+                                <div class="profile_course__poster">
+                                    <img src="{{ MEDIA_URL }}{{ course_data.course.poster.url }}" alt="Упс">
+                                </div>
+                            </div>
+                            <div class="profile_course_body">
+                                <div class="profile_course__title">
+                                    <a href="{% url "passing_course" course_data.course.slug %}">
+                                        <h3>{{ course_data.course.title }}</h3>
+                                    </a>
+                                </div>
+                                <div class="profile_course__completed_lessons">
+                                    <h3>{{ course_data.completed_lessons }}/{{ course_data.lessons }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
+        {% endif %}
+    </div>
+    <div class="profile_detail_bottom">
+        <div class="profile_rating">
+            <div class="self_rating">
+                <div class="self_rating_data" id="self_rating_data">{{ days_online }}</div>
+                <canvas id="onlineChart" width="800" height="400"></canvas>
+            </div>
         </div>
     </div>
-    {% if is_authenticated %}
-        {% if user.username == profile.username %}
-            <div class="profile_courses">
-                <div class="profile_courses__title">
-                    {% if not courses_data %}
-                        <h2>У вас нет доступных курсов</h2>
-                    {% else %}
-                        <h2>Доступные курсы:</h2>
-                    {% endif %}
-                </div>
-                {% for course_data in courses_data %}
-                    <div class="profile_course">
-                        <div class="profile_course_head">
-                            <div class="profile_course__poster">
-                                <img src="{{ MEDIA_URL }}{{ course_data.course.poster.url }}" alt="Упс">
-                            </div>
-                            <div class="profile_course__title">
-                                <a href="{% url "passing_course" course_data.course.slug %}">
-                                    <h3>{{ course_data.course.title }}</h3>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="profile_course_body">
-                            <div class="profile_course__completed_lessons">
-                                <h3>{{ course_data.completed_lessons }}/{{ course_data.lessons }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endif %}
 </section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static "js/online.js" %}"></script>
 {% endblock content %}
