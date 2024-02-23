@@ -31,9 +31,6 @@ class CustomUser(AbstractUser):
     last_interaction = models.DateTimeField(
         blank=True, null=True, verbose_name="Последнее время взаимодействия"
     )
-    time_online = models.IntegerField(
-        default=0, verbose_name="Время онлайна пользователя"
-    )
 
     def is_online(self):
         if self.last_online:
@@ -67,7 +64,7 @@ class FollowingUsers(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         verbose_name="Пользователь",
-        related_name="following_user",
+        related_name="follows",
     )
     following_users = models.ForeignKey(
         CustomUser,
@@ -82,3 +79,23 @@ class FollowingUsers(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user} - {self.following_users}"
+
+
+class OnlineUser(models.Model):
+    """Model of online user"""
+
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        related_name="user_online",
+    )
+    date = models.DateField(verbose_name="Дата")
+    time_online = models.IntegerField(default=0, verbose_name="Время онлайна за день")
+
+    class Meta:
+        verbose_name = "Онлайн пользователя"
+        verbose_name_plural = "Онлайн пользователей"
+
+    def __str__(self):
+        return f"{self.user} - {self.date} - {self.time_online}"

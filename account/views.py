@@ -1,13 +1,20 @@
+import json
+import math
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.db import connection
+from django.db.models import Prefetch
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views import View
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView
 
 from account.forms import SingupForm
-from account.models import CustomUser, FollowingUsers
-from course.models import LessonUser, Lesson
+from account.models import CustomUser, FollowingUsers, OnlineUser
+from course.models import LessonUser, Lesson, CourseUser
 from project_root.settings import BASE_DIR
 
 
@@ -87,7 +94,22 @@ class ProfileView(View):
 
     def get(self, request, profile_slug):
         user = request.user
-        profile = CustomUser.objects.filter(slug=profile_slug).first()
+        profile = (
+            CustomUser.objects.prefetch_related(
+                Prefetch(
+                    "courses_user",
+                    queryset=CourseUser.objects.prefetch_related(
+                        "course",
+                        "course__modules",
+                        "course__modules__lessons",
+                    ).filter(is_available=True),
+                    to_attr="avaliable_courses",
+                ),
+                Prefetch("lessons_user", to_attr="completed_lessons"),
+            )
+            .filter(slug=profile_slug)
+            .first()
+        )
         is_authenticated = user.is_authenticated
 
         context = {
@@ -98,10 +120,36 @@ class ProfileView(View):
         if not is_authenticated:
             return render(request, "profile.html", context)
 
-        is_followed = user.following_user.filter(following_users_id=profile.id).first()
-        follows = profile.following_user.all()
-        available_courses = profile.courses_user.filter(is_available=True)
+        available_courses = profile.avaliable_courses
         courses_data = []
+
+        month = timezone.now().month
+        now_date = datetime.date.today()
+        start_week = now_date - datetime.timedelta(now_date.weekday())
+        end_week = start_week + datetime.timedelta(7)
+
+        is_followed = FollowingUsers.objects.filter(user=user, following_users=profile)
+
+        with connection.cursor() as cursor:
+            query = f"""
+                select ou.user_id as profile_id, Sum(ou.time_online) as time_online
+                from account_followingusers as fu
+                join account_onlineuser as ou
+                on (ou.user_id = fu.following_users_id and fu.user_id = {profile.id}) or ou.user_id = {profile.id}
+                where fu.user_id = {profile.id} and extract (month from ou.date::date) = {month}
+                group by ou.user_id
+                order by time_online DESC;
+            """
+            cursor.execute(query)
+            top_online_raws = cursor.fetchall()
+
+        top_onlines = []
+
+        for top_online_raw in top_online_raws:
+            user_id, time_online = top_online_raw
+            time_online = math.ceil(time_online / 60)
+            online_user = CustomUser.objects.filter(id=user_id).first()
+            top_onlines.append({"user": online_user, "time_online": time_online})
 
         for available_course in available_courses:
             course = available_course.course
@@ -117,19 +165,45 @@ class ProfileView(View):
                 }
             )
 
+        month_online_profile = OnlineUser.objects.filter(
+            user=profile, date__month=month
+        )
+        month_days_online = {}
+
+        if month_online_profile:
+            for month_date_online in month_online_profile:
+                day_online = month_date_online.date.day
+                time_online = month_date_online.time_online
+                month_days_online[day_online] = time_online
+
+        week_online_profile = OnlineUser.objects.filter(
+            user=profile, date__range=[start_week, end_week]
+        )
+        week_days_online = {}
+
+        if week_online_profile:
+            for week_date_online in week_online_profile:
+                day_online = week_date_online.date.day
+                time_online = week_date_online.time_online
+                week_days_online[day_online] = time_online
+
+        follows = FollowingUsers.objects.filter(user=profile)
+
         context = {
             "profile": profile,
-            "follows": follows,
+            "top_onlines": top_onlines,
+            "month_days_online": json.dumps(month_days_online),
+            "week_days_online": json.dumps(week_days_online),
             "is_authenticated": is_authenticated,
             "is_followed": is_followed,
             "courses_data": courses_data,
+            "follows": follows,
         }
 
         return render(request, "profile.html", context)
 
 
 def handle_uploaded_file(f):
-
     with open(f"{BASE_DIR}/media/avatars/{f.name}", "wb+") as destination:
         for chunk in f.chunks():
             destination.write(chunk)
