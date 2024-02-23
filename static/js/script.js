@@ -106,3 +106,42 @@ function changeVisionRating(button1, button2, rating) {
     button2.style.marginLeft = "5px";
     rating.style.display = "block";
 }
+
+
+function sendAnswerToBackend(button, courseSlug, moduleSlug, lessonSlug) {
+    var csrftoken = getCookie("csrftoken");
+    var questionDiv = button.closest('.exercise__question');
+    var selectedAnswer = questionDiv.querySelector('input[name="answer_id"]:checked');
+    if (!selectedAnswer) {
+        alert("Не выбран ответ!");
+    }
+    else {
+        var exerciseId = questionDiv.querySelector('input[name="exercise_id"]').value;
+        var answerId = selectedAnswer.value;
+        console.log(`${courseSlug}/${moduleSlug}/${lessonSlug}/passing`);
+        $.ajax({
+            url:`/course/${courseSlug}/${moduleSlug}/${lessonSlug}/passing`,
+            type: "POST",
+            data: {
+                "exercise_id": exerciseId,
+                "answer_id": answerId
+            },
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function(response) {
+                if (response.success) {
+                    $("#exercise__message").text("Правильный ответ");
+                    $("#exercise__message").removeClass();
+                    $("#exercise__message").addClass("message_success");
+
+                }
+                else {
+                    $("#exercise__message").text("Неправильный ответ");
+                    $("#exercise__message").removeClass();
+                    $("#exercise__message").addClass("message_error");
+                }
+            }
+        });
+    }
+}

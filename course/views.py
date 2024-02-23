@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic import ListView
 
@@ -161,54 +161,21 @@ class PassingLessonView(View):
 
     def post(self, request, course_slug, module_slug, lesson_slug):
         user = request.user
-        if request.POST.get("answer_id"):
-            answer_id = request.POST.get("answer_id", None)
+        answer_id = request.POST.get("answer_id")
+        exercise_id = request.POST.get("exercise_id")
+        exercise = Exercise.objects.filter(id=exercise_id).first()
+        answer = Answer.objects.filter(id=answer_id).first()
 
-            if not answer_id:
-                messages.error(request, "Не дан ответ")
-                return redirect(
-                    reverse(
-                        "passing_lesson",
-                        kwargs={
-                            "course_slug": course_slug,
-                            "module_slug": module_slug,
-                            "lesson_slug": lesson_slug,
-                        },
-                    )
-                )
+        if not answer.is_correct:
+            messages.error(request, "Неправильный ответ")
+            return JsonResponse({"success": False})
 
-            exercise_id = request.POST.get("exercise_id", None)
-            exercise = Exercise.objects.filter(id=exercise_id).first()
-            answer = Answer.objects.filter(id=answer_id).first()
-
-            if not answer.is_correct:
-                messages.error(request, "Неправильный ответ")
-                return redirect(
-                    reverse(
-                        "passing_lesson",
-                        kwargs={
-                            "course_slug": course_slug,
-                            "module_slug": module_slug,
-                            "lesson_slug": lesson_slug,
-                        },
-                    )
-                )
-
-            ExerciseUser.objects.update_or_create(
-                user=user,
-                exercise=exercise,
-                defaults={
-                    "is_completed": True,
-                },
-            )
-
-        return redirect(
-            reverse(
-                "passing_lesson",
-                kwargs={
-                    "course_slug": course_slug,
-                    "module_slug": module_slug,
-                    "lesson_slug": lesson_slug,
-                },
-            )
+        ExerciseUser.objects.update_or_create(
+            user=user,
+            exercise=exercise,
+            defaults={
+                "is_completed": True,
+            },
         )
+
+        return JsonResponse({"success": True})
