@@ -1,4 +1,6 @@
 import json
+import math
+import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -120,25 +122,34 @@ class ProfileView(View):
 
         available_courses = profile.avaliable_courses
         courses_data = []
+
         month = timezone.now().month
+        now_date = datetime.date.today()
+        start_week = now_date - datetime.timedelta(now_date.weekday())
+        end_week = start_week + datetime.timedelta(7)
+
         is_followed = FollowingUsers.objects.filter(user=user, following_users=profile)
+
         with connection.cursor() as cursor:
             query = f"""
-                select ou.user_id as profile_id, Sum(ou.time_online)
+                select ou.user_id as profile_id, Sum(ou.time_online) as time_online
                 from account_followingusers as fu
                 join account_onlineuser as ou
-                on ou.user_id = fu.following_users_id
+                on (ou.user_id = fu.following_users_id and fu.user_id = {profile.id}) or ou.user_id = {profile.id}
                 where fu.user_id = {profile.id} and extract (month from ou.date::date) = {month}
                 group by ou.user_id
+                order by time_online DESC;
             """
             cursor.execute(query)
-            online_follows_raws = cursor.fetchall()
+            top_online_raws = cursor.fetchall()
 
-        online_follows = {}
+        top_onlines = []
 
-        for online_follow_raw in online_follows_raws:
-            user_id, time_online = online_follow_raw
-            online_follows[user_id] = time_online
+        for top_online_raw in top_online_raws:
+            user_id, time_online = top_online_raw
+            time_online = math.ceil(time_online / 60)
+            online_user = CustomUser.objects.filter(id=user_id).first()
+            top_onlines.append({"user": online_user, "time_online": time_online})
 
         for available_course in available_courses:
             course = available_course.course
@@ -157,20 +168,36 @@ class ProfileView(View):
         month_online_profile = OnlineUser.objects.filter(
             user=profile, date__month=month
         )
-        days_online = {}
+        month_days_online = {}
 
         if month_online_profile:
-            for date_online in month_online_profile:
-                day_online = date_online.date.day
-                time_online = date_online.time_online
-                days_online[day_online] = time_online
+            for month_date_online in month_online_profile:
+                day_online = month_date_online.date.day
+                time_online = month_date_online.time_online
+                month_days_online[day_online] = time_online
+
+        week_online_profile = OnlineUser.objects.filter(
+            user=profile, date__range=[start_week, end_week]
+        )
+        week_days_online = {}
+
+        if week_online_profile:
+            for week_date_online in week_online_profile:
+                day_online = week_date_online.date.day
+                time_online = week_date_online.time_online
+                week_days_online[day_online] = time_online
+
+        follows = FollowingUsers.objects.filter(user=profile)
+
         context = {
             "profile": profile,
-            # "follows": follows,
-            "days_online": json.dumps(days_online),
+            "top_onlines": top_onlines,
+            "month_days_online": json.dumps(month_days_online),
+            "week_days_online": json.dumps(week_days_online),
             "is_authenticated": is_authenticated,
             "is_followed": is_followed,
             "courses_data": courses_data,
+            "follows": follows,
         }
 
         return render(request, "profile.html", context)

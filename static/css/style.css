@@ -116,7 +116,6 @@ section {
 
 .title__singin__form {
 	text-align: center;
-
 	font-size: 20px;
 }
 
@@ -147,6 +146,7 @@ section {
 	margin-top: 100px;
 	padding-left: 200px;
 	display: block;
+    position: relative;
 }
 
 .profile_detail_top {
@@ -187,14 +187,14 @@ section {
 
 .another_profile_detail {
 	margin-top: 100px;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	padding-right: 75px;
+    display: flex;
+    justify-content: center;
+    text-align: center !important;
+    padding-right: 75px;
 }
 
 .profile_courses {
-	margin-left: 3em;
+	margin-left: 13em;
 	display: block;
 }
 
@@ -224,8 +224,88 @@ section {
   	margin-left: 2em;
 }
 
-.self_rating_data {
-	display: none !important;
+.rating_button {
+	margin-bottom: 20px;
+}
+
+.month_activity_button {
+	display: none;
+}
+
+.rating_canvas {
+	width: 800px !important;
+	height: 400px !important;
+}
+
+.self_rating_month_data {
+	display: none;
+}
+
+.self_rating_week_data {
+	display: none;
+}
+
+.self_rating_week {
+	display: none;
+}
+
+.top_rating {
+	display: none;
+}
+
+.top_rating__title {
+	margin-bottom: 20px;
+}
+
+.top_rating__user {
+	display: flex;
+	margin-bottom: 20px;
+}
+
+.top_rating__profile {
+	display: flex;
+}
+
+.top_rating_profile__avatar img {
+	width: 50px;
+	height: 50px;
+}
+
+.top_rating_profile__username {
+	margin-left: 20px;
+	margin-top: 13px;
+}
+
+.top_rating__online {
+	margin-left: 20px;
+	margin-top: 13px;
+}
+
+.follows {
+	margin-left: 5em;
+	display: block;
+}
+
+.follows_title {
+	margin-bottom: 10px;
+}
+
+.follow_data {
+	display: inline-flex;
+	margin-bottom: 15px;
+}
+
+.follow_avatar img {
+	width: 50px;
+	height: 50px;
+}
+
+.follow_username {
+	margin-left: 10px;
+}
+
+.follow_username a {
+	color: black;
 }
 
 /*---------------------

@@ -88,14 +88,92 @@
             {% endif %}
         {% endif %}
     </div>
-    <div class="profile_detail_bottom">
-        <div class="profile_rating">
-            <div class="self_rating">
-                <div class="self_rating_data" id="self_rating_data">{{ days_online }}</div>
-                <canvas id="onlineChart" width="800" height="400"></canvas>
+    {% if is_authenticated %}
+        {% if user.username == profile.username %}
+            <div class="profile_detail_bottom">
+                <div class="profile_rating">
+                    <div class="rating_button">
+                        <button class="week_activity_button"
+                                onclick="changeVisionRating('month_activity_button', 'top_rating_button', 'self_rating_week')">
+                            Активность за неделю
+                        </button>
+                        <button class="month_activity_button"
+                                onclick="changeVisionRating('week_activity_button', 'top_rating_button', 'self_rating_month')">
+                            Активность за месяц
+                        </button>
+                        <button class="top_rating_button"
+                                onclick="changeVisionRating('month_activity_button', 'week_activity_button', 'top_rating')">
+                            Топ рейтинга
+                        </button>
+                    </div>
+                    <div class="self_rating">
+                        <div class="self_rating_month">
+                            <div class="self_rating_month_data" id="self_rating_month_data">{{ month_days_online }}</div>
+                            <canvas class="rating_canvas" id="month_online"></canvas>
+                        </div>
+                        <div class="self_rating_week">
+                            <div class="self_rating_week_data" id="self_rating_week_data">{{ week_days_online }}</div>
+                            <canvas class="rating_canvas" id="week_online"></canvas>
+                        </div>
+                    </div>
+                    <div class="top_rating">
+                        <div class="top_rating__title">
+                            <h4>Рейтинг по активности</h4>
+                        </div>
+                        <div class="top_rating_data">
+                            {% for top_online in top_onlines %}
+                                <div class="top_rating__user">
+                                    <div class="top_rating__profile">
+                                        <div class="top_rating_profile__avatar">
+                                            <img src="{{ MEDIA_URL }}{{ top_online.user.avatar.url }}"
+                                                 alt="{% static 'images/default-avatar.png' %}">
+                                        </div>
+                                        <div class="top_rating_profile__username">
+                                            <h6>{{ top_online.user.username }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="top_rating__online">
+                                        {% with time_online=top_online.time_online %}
+                                            <h6>
+                                                {{ time_online }}
+                                                {% if time_online|add:"-1"|divisibleby:10 and not time_online|stringformat:"s"|slice:"-2:" == "11" %}
+                                                    минута
+                                                {% elif time_online in "2,3,4" %}
+                                                    минуты
+                                                {% else %}
+                                                    минут
+                                                {% endif %}
+                                            </h6>
+                                        {% endwith %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="follows">
+                    <div class="follows_title">
+                        <h4>Мои подписки:</h4>
+                    </div>
+                    {% for follow in follows %}
+                        <div class="follow">
+                            <div class="follow_data">
+                                <div class="follow_avatar">
+                                    <img src="{{ MEDIA_URL }} {{ follow.following_users.avatar.url }}"
+                                         alt="{% static 'images/default-avatar.png' %}">
+                                </div>
+                                <div class="follow_username">
+                                    <a href="{% url 'profile' follow.following_users.slug %}">
+                                        <h4>{{ follow.following_users.username }}</h4>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </div>
+        {% endif %}
+    {% endif %}
 </section>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{% static "js/online.js" %}"></script>

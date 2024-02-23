@@ -23,7 +23,6 @@ function selectionPartOfLesson(type) {
     exercises_homework.style.display = "none";
     elem = document.querySelector('.'+ type)
     elem.style.display = "block";
-
 }
 
 
@@ -80,4 +79,30 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function changeVisionRating(button1, button2, rating) {
+    week_activity_button = document.querySelector(".week_activity_button");
+    month_activity_button = document.querySelector(".month_activity_button");
+    top_rating_button = document.querySelector(".top_rating_button");
+    self_rating_month = document.querySelector(".self_rating_month");
+    self_rating_week = document.querySelector(".self_rating_week");
+    top_rating = document.querySelector(".top_rating");
+
+    week_activity_button.style.display = "none";
+    month_activity_button.style.display = "none";
+    top_rating_button.style.display = "none";
+    self_rating_month.style.display = "none";
+    self_rating_week.style.display = "none";
+    top_rating.style.display = "none";
+
+    button = document.querySelector('.rating_button')
+    button1 = document.querySelector('.'+ button1)
+    button2 = document.querySelector('.'+ button2)
+    rating = document.querySelector('.' + rating)
+    button.style.display = "flex";
+    button1.style.display = "block";
+    button2.style.display = "block";
+    button2.style.marginLeft = "5px";
+    rating.style.display = "block";
 }
