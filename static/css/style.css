@@ -119,11 +119,11 @@ section {
 	font-size: 20px;
 }
 
-.message-error {
+.message_error {
 	color: #e53637
 }
 
-.message-success {
+.message_success {
 	color: #a9d18e;
 }
 
