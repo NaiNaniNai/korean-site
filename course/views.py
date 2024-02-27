@@ -162,20 +162,21 @@ class PassingLessonView(View):
     def post(self, request, course_slug, module_slug, lesson_slug):
         user = request.user
         answer_id = request.POST.get("answer_id")
-        exercise_id = request.POST.get("exercise_id")
-        exercise = Exercise.objects.filter(id=exercise_id).first()
-        answer = Answer.objects.filter(id=answer_id).first()
+        exercise_ids = request.POST.get("exercises_id")
+        exercises_id = [int(x.strip()) for x in exercise_ids.split(",")]
+        for exercise_id in exercises_id:
+            exercise = Exercise.objects.filter(id=exercise_id).first()
+            if answer_id:
+                answer = Answer.objects.filter(id=answer_id).first()
+                if not answer.is_correct:
+                    messages.error(request, "Неправильный ответ")
+                    return JsonResponse({"success": False})
 
-        if not answer.is_correct:
-            messages.error(request, "Неправильный ответ")
-            return JsonResponse({"success": False})
-
-        ExerciseUser.objects.update_or_create(
-            user=user,
-            exercise=exercise,
-            defaults={
-                "is_completed": True,
-            },
-        )
-
+            ExerciseUser.objects.update_or_create(
+                user=user,
+                exercise=exercise,
+                defaults={
+                    "is_completed": True,
+                },
+            )
         return JsonResponse({"success": True})

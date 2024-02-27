@@ -231,6 +231,7 @@ CKEDITOR_CONFIGS = {
                     "Preview",
                     "Maximize",
                     "Youtube",
+                    "Html5audio",
                 ],
             },
         ],
@@ -260,6 +261,7 @@ CKEDITOR_CONFIGS = {
                 "dialogui",
                 "elementspath",
                 "youtube",
+                "html5audio",
             ]
         ),
     }
