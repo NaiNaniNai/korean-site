@@ -140,6 +140,10 @@ function sendAnswerToBackend(button, answerId, courseSlug, moduleSlug, lessonSlu
                 }
             }
             else {
+                exerciseMessage.text("Вы уже прошли это упражнение");
+                exerciseMessage.addClass("message_error");
+            }
+            if (response.fail) {
                 exerciseMessage.text("Неправильный ответ");
                 exerciseMessage.addClass("message_error");
             }

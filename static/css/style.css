@@ -502,6 +502,10 @@ section {
 	text-align: center;
 }
 
+.lesson_slug {
+	display: none;
+}
+
 .lesson_plan_part_exercise__title a{
 	color:black;
 }
