@@ -8,6 +8,7 @@
         <div class="container">
             <div class="row">
                 <div class="lesson_title__title">
+                    <div class="lesson_slug" id="lesson_slug">{{ course.slug }}/{{ module.slug }}/{{ lesson.slug }}</div>
                     {% if not is_available %}
                         <h1>Вам недоступен этот курс!</h1>
                         <h3>Для получения доступа обратитесь к администрации.</h3>
@@ -212,6 +213,5 @@
 {% block script %}
     {% if is_available %}
         <script src="{% static "js/passing-theory-part.js" %}"></script>
-        <script>SendToBackend(`{{ course.slug }}`, `{{ module.slug }}`, `{{ lesson.slug }}`);</script>
     {% endif %}
 {% endblock script %}

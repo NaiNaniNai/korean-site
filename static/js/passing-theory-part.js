@@ -13,24 +13,38 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function SendToBackend(courseSlug, moduleSlug, lessonSlug) {
-    var csrftoken = getCookie("csrftoken");
-    var exerciseElements = document.querySelectorAll('.exercise_theory__title');
-    var exercisesId = [];
+function getUrl() {
+    return document.getElementById("lesson_slug").textContent
+};
 
-    exerciseElements.forEach(function(element) {
-        var exerciseId = element.getAttribute('id');
-        exercisesId.push(exerciseId);
+var url = getUrl();
+
+function handleIntersection(entries, observer) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            sendToBackend(`${entry.target.id}`, url);
+        }
     });
+}
 
+const observer = new IntersectionObserver(handleIntersection);
+const elements = document.querySelectorAll('.exercise_theory__title');
+
+elements.forEach(element => {
+    observer.observe(element);
+});
+
+
+function sendToBackend(exerciseId, url) {
+    var csrftoken = getCookie("csrftoken");
     var progressBar = document.querySelector(".theory_part_completed_exercises");
     var countOfExercises = document.querySelector(".theory_part_exercises_count");
 
     $.ajax({
-        url:`/course/${courseSlug}/${moduleSlug}/${lessonSlug}/passing`,
+        url:`/course/${url}/passing`,
         type: "POST",
         data: {
-            "exercises_id": `${exercisesId}`
+            "exercises_id": exerciseId
         },
         beforeSend: function(xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -40,7 +54,7 @@ function SendToBackend(courseSlug, moduleSlug, lessonSlug) {
                 var completedExercises = parseInt(progressBar.innerText);
                 var countOfExercisesInt= parseInt(countOfExercises.innerText);
                 if (completedExercises < countOfExercisesInt) {
-                    progressBar.innerHTML = `<h4>${completedExercises+countOfExercisesInt}</h4>`;
+                    progressBar.innerHTML = `<h4>${completedExercises+1}</h4>`;
                 }
             }
         }
