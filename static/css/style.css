@@ -471,18 +471,35 @@ section {
 
 .lesson_plan {
 	position: fixed;
+	margin-top: 5%;
 	z-index: 10000000;
-	width: 25%;
+	max-width: 25%;
 }
 
+.lesson_plan ::after {
+	content: '';
+    position: absolute;
+    top: -50%;
+    bottom: -50%;
+    right: 0;
+	left: 125%;
+    width: 4px;
+    background-color: #a9d18e;
+
+}
 
 .lesson_plan__title {
 	margin-bottom: 3%;
 }
 
+.title_lesson {
+	margin-left: 20%;
+	margin-bottom: 1em;
+
+}
+
 .lesson_title__title {
 	text-align: center;
-
 }
 
 .lesson_plan_part_exercise__title a{
@@ -515,6 +532,10 @@ section {
 	background: transparent;
 }
 
+.lesson_plan_part_info__progress_bar {
+	display: flex;
+}
+
 .lesson_plan_part__title button {
 	outline: none;
  	border:none;
@@ -526,16 +547,16 @@ section {
 	text-align: center;
 }
 
-.exercises_theory {
-	display: none;
-}
-
 .exercises_practical {
 	display: none;
 }
 
 .exercises_homework {
 	display: none;
+}
+
+.exercise_theory__title {
+	margin-bottom: 2%;
 }
 
 .exercise__title {

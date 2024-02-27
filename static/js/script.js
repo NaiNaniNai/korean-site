@@ -7,7 +7,7 @@ var showSection = function showSection(section, isAnimate) {
   if (isAnimate) {
     $('body, html').animate({
       scrollTop: reqSectionPos },
-    800);
+    800);my_file
   } else {
     $('body, html').scrollTop(reqSectionPos);
   }
@@ -26,13 +26,13 @@ function selectionPartOfLesson(type) {
 }
 
 
-function selectionExercise(number) {
+function selectionExercise(exercise) {
     exercises_practical = document.querySelectorAll(".exercise_practical");
+    console.log(number);
     exercises_practical.forEach(elem => {
         elem.style.display = "none";
     })
-    element = document.getElementById(number);
-    element.style.display = "block";
+    exercise.style.display = "block";
 }
 
 
@@ -108,40 +108,43 @@ function changeVisionRating(button1, button2, rating) {
 }
 
 
-function sendAnswerToBackend(button, courseSlug, moduleSlug, lessonSlug) {
+function sendAnswerToBackend(button, answerId, courseSlug, moduleSlug, lessonSlug, exercisesNumber) {
     var csrftoken = getCookie("csrftoken");
     var questionDiv = button.closest('.exercise__question');
-    var selectedAnswer = questionDiv.querySelector('input[name="answer_id"]:checked');
-    if (!selectedAnswer) {
-        alert("Не выбран ответ!");
-    }
-    else {
-        var exerciseId = questionDiv.querySelector('input[name="exercise_id"]').value;
-        var answerId = selectedAnswer.value;
-        console.log(`${courseSlug}/${moduleSlug}/${lessonSlug}/passing`);
-        $.ajax({
-            url:`/course/${courseSlug}/${moduleSlug}/${lessonSlug}/passing`,
-            type: "POST",
-            data: {
-                "exercise_id": exerciseId,
-                "answer_id": answerId
-            },
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            },
-            success: function(response) {
-                if (response.success) {
-                    $("#exercise__message").text("Правильный ответ");
-                    $("#exercise__message").removeClass();
-                    $("#exercise__message").addClass("message_success");
+    var exerciseId = questionDiv.querySelector('input[name="exercise_id"]').value;
+    var progressBar = document.querySelector(".practical_part_completed_exercises");
+    var countOfExercises = document.querySelector(".practical_part_exercises_count");
+    var exerciseList = $(`#exercise__title__${exercisesNumber}`);
+    var exerciseMessage = $(`#exercise__message__${exercisesNumber}`);
 
-                }
-                else {
-                    $("#exercise__message").text("Неправильный ответ");
-                    $("#exercise__message").removeClass();
-                    $("#exercise__message").addClass("message_error");
+    exerciseMessage.removeClass();
+    $.ajax({
+        url:`/course/${courseSlug}/${moduleSlug}/${lessonSlug}/passing`,
+        type: "POST",
+        data: {
+            "type": "practical",
+            "exercises_id": exerciseId,
+            "answer_id": answerId
+        },
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function(response) {
+            if (response.success) {
+                exerciseList.removeClass();
+                exerciseList.addClass("exercise_practical__completed__link");
+                exerciseMessage.text("Правильный ответ");
+                exerciseMessage.addClass("message_success");
+                var completedExercises = parseInt(progressBar.innerText);
+                var countOfExercisesInt= parseInt(countOfExercises.innerText);
+                if (completedExercises < countOfExercisesInt) {
+                    progressBar.innerHTML = `<h4>${completedExercises+1}</h4>`;
                 }
             }
-        });
-    }
+            else {
+                exerciseMessage.text("Неправильный ответ");
+                exerciseMessage.addClass("message_error");
+            }
+        }
+    });
 }

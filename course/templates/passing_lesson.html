@@ -3,6 +3,7 @@
     |{{ lesson.title }}
 {% endblock title %}
 {% block content %}
+    {% load static %}
     <section class="lesson_title">
         <div class="container">
             <div class="row">
@@ -10,182 +11,207 @@
                     {% if not is_available %}
                         <h1>Вам недоступен этот курс!</h1>
                         <h3>Для получения доступа обратитесь к администрации.</h3>
-                    {% else %}
-                        <h1>{{ lesson.title }}</h1>
                     {% endif %}
                 </div>
             </div>
         </div>
     </section>
-    <section class="section-lesson">
-        <div class="container">
-            <div class="row">
-                <div class="lesson">
-                    <div class="lesson_plan">
-                        <div class="lesson_plan__title">
-                            <h2>План урока:</h2>
-                        </div>
-                        <div class="lesson_plan_theory_part">
-                            <div class="lesson_plan_part_info">
-                                <div class="lesson_plan_part_info__title">
-                                    <button onclick="selectionPartOfLesson('exercises_{{ theory_part.slug }}')">
-                                        <h4>{{ theory_part.title }}</h4>
-                                    </button>
+    {% if is_available %}
+        <section class="section-lesson">
+            <div class="container">
+                <div class="row">
+                    <div class="lesson">
+                        <div class="lesson_plan">
+                            <div class="lesson_plan__title">
+                                <div class="title_lesson">
+                                    <h1>{{ lesson.title }}</h1>
                                 </div>
-                                <div class="lesson_plan_part_info__progress_bar">
-                                    <h4>{{ theory_completed_exercises.count }}/{{ theory_part.exercises.count }}</h4>
+                                <h2>План урока:</h2>
+                            </div>
+                            <div class="lesson_plan_theory_part">
+                                <div class="lesson_plan_part_info">
+                                    <div class="lesson_plan_part_info__title">
+                                        <button onclick="selectionPartOfLesson('exercises_{{ theory_part.slug }}')">
+                                            <h4>{{ theory_part.title }}</h4>
+                                        </button>
+                                    </div>
+                                    <div class="lesson_plan_part_info__progress_bar">
+                                        <div class="theory_part_completed_exercises">
+                                            <h4>{{ theory_completed_exercises.count }}</h4>
+                                        </div>
+                                        <div class="theory_part__progress_bar__slash">
+                                            <h4>/</h4>
+                                        </div>
+                                        <div class="theory_part_exercises_count">
+                                            <h4>{{ theory_part.exercises.count }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="lesson_plan_theory_part_exercises">
+                                    {% for exercise in theory_part.exercises.all %}
+                                        <div class="lesson_plan_part_exercise__title">
+                                            <a id="test_{{ exercise.number }}"
+                                               href="#exercise_theory_{{ exercise.number }}">{{ exercise.number }}.{{ exercise.title }}</a>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             </div>
-                            <div class="lesson_plan_theory_part_exercises">
+                            <div class="lesson_plan_practical_part">
+                                <div class="lesson_plan_part_info">
+                                    <div class="lesson_plan_part_info__title">
+                                        <button onclick="selectionPartOfLesson('exercises_{{ practical_part.slug }}')">
+                                            <h4>{{ practical_part.title }}</h4>
+                                        </button>
+                                    </div>
+                                    <div class="lesson_plan_part_info__progress_bar">
+                                        <div class="practical_part_completed_exercises">
+                                            <h4>{{ practical_part_completed_exercises.count }}</h4>
+                                        </div>
+                                        <div class="practical_part__progress_bar__slash">
+                                            <h4>/</h4>
+                                        </div>
+                                        <div class="practical_part_exercises_count">
+                                            <h4>{{ practical_part.exercises.count }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lesson_plan_homework_part">
+                                <div class="lesson_plan_part_info">
+                                    <div class="lesson_plan_part_info__title">
+                                        <button onclick="selectionPartOfLesson('exercises_{{ homework_part.slug }}')">
+                                            <h4>{{ homework_part.title }}</h4>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exercises_list">
+                            <div class="exercises_theory">
                                 {% for exercise in theory_part.exercises.all %}
-                                    <div class="lesson_plan_part_exercise__title">
-                                        <a id="test_{{ exercise.number }}"
-                                           href="#exercise_theory_{{ exercise.number }}">{{ exercise.number }}.{{ exercise.title }}</a>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="lesson_plan_practical_part">
-                            <div class="lesson_plan_part_info">
-                                <div class="lesson_plan_part_info__title">
-                                    <button onclick="selectionPartOfLesson('exercises_{{ practical_part.slug }}')">
-                                        <h4>{{ practical_part.title }}</h4>
-                                    </button>
-                                </div>
-                                <div class="lesson_plan_part_info__progress_bar">
-                                    <h4>{{ practical_part_completed_exercises.count }}/{{ practical_part.exercises.count }}</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="lesson_plan_homework_part">
-                            <div class="lesson_plan_part_info">
-                                <div class="lesson_plan_part_info__title">
-                                    <button onclick="selectionPartOfLesson('exercises_{{ homework_part.slug }}')">
-                                        <h4>{{ homework_part.title }}</h4>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="exercises_list">
-                        <div class="exercises_theory">
-                            {% for exercise in theory_part.exercises.all %}
-                                <div class="exercise_theory" id="exercise_theory_{{ exercise.number }}">
-                                    <div class="exercise__title">
-                                        <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
-                                    </div>
-                                    <div class="exercise__body">
-                                        <div class="exercise__video">
-                                            {% if exercise.video %}
-                                                <h5>Посмотрите видеозапись</h5>
-                                                <video controls="controls">
-                                                    <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
-                                                </video>
-                                            {% endif %}
+                                    <div class="exercise_theory" id="exercise_theory_{{ exercise.number }}">
+                                        <div class="exercise_theory__title" id="{{ exercise.id }}">
+                                            <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
                                         </div>
-                                        <div class="exercise__audio">
-                                            {% if exercise.audio %}
-                                                <h5>Послушайте аудиозапись</h5>
-                                                <audio controls="controls">
-                                                    <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
-                                                </audio>
-                                            {% endif %}
-                                        </div>
-                                        <div class="exercise__text">{{ exercise.text|safe }}</div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="exercises_practical">
-                            <div class="exercises_practical__list">
-                                {% for exercise in practical_part.exercises.all %}
-                                    <div class="exercise_practical{% if exercise.pk in practical_part_completed_exercises %}__completed{% endif %}__link">
-                                        <button onclick="selectionExercise({{ exercise.number }})">{{ exercise.number }}</button>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            {% for exercise in practical_part.exercises.all %}
-                                <div class="exercise_practical" id="{{ exercise.number }}">
-                                    <div class="exercise__message">
-                                        <div id="exercise__message">
-                                            <h4>{{ message }}</h4>
-                                        </div>
-                                    </div>
-                                    <div class="exercise__title">
-                                        <h2>{{ exercise.number }}.{{ exercise.title }}</h2>
-                                    </div>
-                                    <div class="exercise__body">
-                                        <div class="exercise__video">
-                                            {% if exercise.video %}
-                                                <h5>Посмотрите видеозапись</h5>
-                                                <video controls="controls">
-                                                    <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
-                                                </video>
-                                            {% endif %}
-                                        </div>
-                                        <div class="exercise__audio">
-                                            {% if exercise.audio %}
-                                                <h5>Послушайте аудиозапись</h5>
-                                                <audio controls="controls">
-                                                    <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
-                                                </audio>
-                                            {% endif %}
-                                        </div>
-                                        <div class="exercise__text">{{ exercise.text|safe }}</div>
-                                        {% for question in exercise.question.all %}
-                                            <div class="exercise__question">
-                                                <div class="exercise_question__title">
-                                                    <h4>{{ question.text }}</h4>
-                                                </div>
-                                                <div class="exercise__answers">
-                                                    {% for answer in exercise.answers.all %}
-                                                        <div class="exercise__answer">
-                                                            <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
-                                                            <input type="radio" name="answer_id" value="{{ answer.id }}">
-                                                            <label for="{{ answer.text }}">{{ answer.text }}</label>
-                                                        </div>
-                                                    {% endfor %}
-                                                </div>
-                                                <button onclick="sendAnswerToBackend(this, `{{ course.slug }}`, `{{ module.slug }}`, `{{ lesson.slug }}`)">
-                                                    Отправить ответ
-                                                </button>
+                                        <div class="exercise__body">
+                                            <div class="exercise__video">
+                                                {% if exercise.video %}
+                                                    <h5>Посмотрите видеозапись</h5>
+                                                    <video controls="controls">
+                                                        <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
+                                                    </video>
+                                                {% endif %}
                                             </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="exercises_homework">
-                            {% for exercise in homework_part.exercises.all %}
-                                <div class="exercise_homework">
-                                    <div class="exercise__title">
-                                        <h2>{{ exercise.title }}</h2>
-                                    </div>
-                                    <div class="exercise__body">
-                                        <div class="exercise__video">
-                                            {% if exercise.video %}
-                                                <h5>Посмотрите видеозапись</h5>
-                                                <video controls="controls">
-                                                    <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
-                                                </video>
-                                            {% endif %}
+                                            <div class="exercise__audio">
+                                                {% if exercise.audio %}
+                                                    <h5>Послушайте аудиозапись</h5>
+                                                    <audio controls="controls">
+                                                        <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
+                                                    </audio>
+                                                {% endif %}
+                                            </div>
+                                            <div class="exercise__text">{{ exercise.text|safe }}</div>
                                         </div>
-                                        <div class="exercise__audio">
-                                            {% if exercise.audio %}
-                                                <h5>Послушайте аудиозапись</h5>
-                                                <audio controls="controls">
-                                                    <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
-                                                </audio>
-                                            {% endif %}
-                                        </div>
-                                        <div class="exercise__text">{{ exercise.text|safe }}</div>
                                     </div>
+                                {% endfor %}
+                            </div>
+                            <div class="exercises_practical">
+                                <div class="exercises_practical__list">
+                                    {% for exercise in practical_part.exercises.all %}
+                                        <div class="exercise_practical{% if exercise.pk in practical_part_completed_exercises %}__completed{% endif %}__link"
+                                             id="exercise__title__{{ exercise.number }}">
+                                            <button onclick="selectionExercise(practical_{{ exercise.number }})">{{ exercise.number }}</button>
+                                        </div>
+                                    {% endfor %}
                                 </div>
-                            {% endfor %}
+                                {% for exercise in practical_part.exercises.all %}
+                                    <div class="exercise_practical" id="practical_{{ exercise.number }}">
+                                        <div class="exercise__message">
+                                            <div id="exercise__message__{{ exercise.number }}">
+                                                <h4>{{ message }}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="exercise__title">
+                                            <h2>{{ exercise.title }}</h2>
+                                        </div>
+                                        <div class="exercise__body">
+                                            <div class="exercise__video">
+                                                {% if exercise.video %}
+                                                    <h5>Посмотрите видеозапись</h5>
+                                                    <video controls="controls">
+                                                        <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
+                                                    </video>
+                                                {% endif %}
+                                            </div>
+                                            <div class="exercise__audio">
+                                                {% if exercise.audio %}
+                                                    <h5>Послушайте аудиозапись</h5>
+                                                    <audio controls="controls">
+                                                        <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
+                                                    </audio>
+                                                {% endif %}
+                                            </div>
+                                            <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                            {% for question in exercise.question.all %}
+                                                <div class="exercise__question">
+                                                    <div class="exercise_question__title">
+                                                        <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+                                                        <h4>{{ question.text }}</h4>
+                                                    </div>
+                                                    <div class="exercise__answers">
+                                                        {% for answer in exercise.answers.all %}
+                                                            <div class="exercise__answer">
+                                                                <input type="hidden" name="answer_id" value="{{ answer.id }}">
+                                                                <button onclick="sendAnswerToBackend(this, this.previousElementSibling.value, `{{ course.slug }}`, `{{ module.slug }}`, `{{ lesson.slug }}`, `{{ exercise.number }}`)">
+                                                                    {{ answer.text }}
+                                                                </button>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="exercises_homework">
+                                {% for exercise in homework_part.exercises.all %}
+                                    <div class="exercise_homework">
+                                        <div class="exercise__title">
+                                            <h2>{{ exercise.title }}</h2>
+                                        </div>
+                                        <div class="exercise__body">
+                                            <div class="exercise__video">
+                                                {% if exercise.video %}
+                                                    <h5>Посмотрите видеозапись</h5>
+                                                    <video controls="controls">
+                                                        <source src="{{ MEDIA_URL }} {{ exercise.video.url }}" type="video/mp4" />
+                                                    </video>
+                                                {% endif %}
+                                            </div>
+                                            <div class="exercise__audio">
+                                                {% if exercise.audio %}
+                                                    <h5>Послушайте аудиозапись</h5>
+                                                    <audio controls="controls">
+                                                        <source src="{{ MEDIA_URL }} {{ exercise.audio.url }}" type="audio/mpeg" />
+                                                    </audio>
+                                                {% endif %}
+                                            </div>
+                                            <div class="exercise__text">{{ exercise.text|safe }}</div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% endif %}
 {% endblock content %}
+{% block script %}
+    {% if is_available %}
+        <script src="{% static "js/passing-theory-part.js" %}"></script>
+        <script>SendToBackend(`{{ course.slug }}`, `{{ module.slug }}`, `{{ lesson.slug }}`);</script>
+    {% endif %}
+{% endblock script %}
