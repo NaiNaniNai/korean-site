@@ -28,7 +28,6 @@ function selectionPartOfLesson(type) {
 
 function selectionExercise(exercise) {
     exercises_practical = document.querySelectorAll(".exercise_practical");
-    console.log(number);
     exercises_practical.forEach(elem => {
         elem.style.display = "none";
     })
@@ -122,7 +121,6 @@ function sendAnswerToBackend(button, answerId, courseSlug, moduleSlug, lessonSlu
         url:`/course/${courseSlug}/${moduleSlug}/${lessonSlug}/passing`,
         type: "POST",
         data: {
-            "type": "practical",
             "exercises_id": exerciseId,
             "answer_id": answerId
         },

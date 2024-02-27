@@ -161,7 +161,6 @@ class PassingLessonView(View):
 
     def post(self, request, course_slug, module_slug, lesson_slug):
         user = request.user
-        print(request.POST.get("type"))
         answer_id = request.POST.get("answer_id")
         exercise_ids = request.POST.get("exercises_id")
         exercises_id = [int(x.strip()) for x in exercise_ids.split(",")]

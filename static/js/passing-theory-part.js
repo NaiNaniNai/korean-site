@@ -1,4 +1,3 @@
-console.log("beggin");
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -31,7 +30,6 @@ function SendToBackend(courseSlug, moduleSlug, lessonSlug) {
         url:`/course/${courseSlug}/${moduleSlug}/${lessonSlug}/passing`,
         type: "POST",
         data: {
-            "type": "theory",
             "exercises_id": `${exercisesId}`
         },
         beforeSend: function(xhr, settings) {
