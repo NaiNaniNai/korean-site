@@ -1,7 +1,20 @@
 .icon_profile {
 	font-family: FontAwesome;
 }
+.main-nav {
+	display: flex;
+}
 
+.logo {
+	margin-top: -0.5em;
+	margin-left: 2em;
+	color: white;
+	font-size: 12px;
+	margin-right: 33em;
+}
+.logo img {
+	width: 4.5em;
+}
 
 .singup__form {
 	width: 500px;
@@ -154,6 +167,7 @@ section {
 }
 
 .profile_detail_bottom {
+	margin-top: 2em;
 	display: flex;
 }
 
@@ -209,6 +223,10 @@ section {
   	display: flex;
 }
 
+.profile_course__title a {
+	color: black;
+}
+
 .profile_course__poster {
   	margin-left: 2em;
   	max-width: 10em;
@@ -251,6 +269,8 @@ section {
 
 .top_rating {
 	display: none;
+	width: 800px !important;
+	height: 400px !important;
 }
 
 .top_rating__title {
@@ -370,10 +390,8 @@ section {
 }
 
 .course__image img {
-	width: auto;
-	height: auto;
-	max-width: 200px;
-	max-height: 200px;
+	width: 200px;
+	height: 200px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 }

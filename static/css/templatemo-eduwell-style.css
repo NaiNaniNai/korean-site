@@ -279,7 +279,7 @@ header
   background: transparent;
 }
 
-.header-area .main-nav .logo {
+.header-area .main-nav {
   line-height: 100px;
   color: #fff;
   font-size: 28px;
@@ -293,7 +293,7 @@ header
   transition: all 0.3s ease 0s;
 }
 
-.background-header .main-nav .logo {
+.background-header .main-nav  {
   line-height: 75px;
 }
 
@@ -581,7 +581,7 @@ header
   .header-area .container {
     padding: 0px;
   }
-  .header-area .logo {
+  .header-area {
     margin-left: 30px;
   }
   .header-area .menu-trigger {
