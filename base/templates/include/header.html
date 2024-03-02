@@ -4,38 +4,35 @@
         <div class="row">
             <div class="col-12">
                 <nav class="main-nav">
-                    <a href="index.html" class="logo">
-                        <img src="{% static '/images/templatemo-eduwell.png' %}" alt="korean-site">
-                    </a>
+                    <div class="logotype">
+                        <a href="index.html" class="logo">
+                            <img src="{% static '/images/logotype.png' %}" alt="korean-site">
+                            Chipi school | Школа азиатских языков
+                        </a>
+                    </div>
                     <ul class="nav">
                         <li>
-                            <a href="#top" class="active">Home</a>
-                        </li>
-                        <li class="scroll-to-section">
-                            <a href="#services">Services</a>
-                        </li>
-                        <li class="scroll-to-section">
-                            <a href="#courses">Courses</a>
-                        </li>
-                        <li class="has-sub">
-                            <a href="">Pages</a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="about-us.html">About Us</a>
-                                </li>
-                                <li>
-                                    <a href="our-services.html">Our Services</a>
-                                </li>
-                                <li>
-                                    <a href="contact-us.html">Contact Us</a>
-                                </li>
-                            </ul>
+                            <a href="{% url "course_list" %}">Главная</a>
                         </li>
                         <li>
-                            <a href="#testimonials">Testimonials</a>
+                            <a href="{% url "course_list" %}">Курсы</a>
                         </li>
+                        {#                        <li class="has-sub">#}
+                        {#                            <a href="">Страницы</a>#}
+                        {#                            <ul class="sub-menu">#}
+                        {#                                <li>#}
+                        {#                                    <a href="about-us.html">About Us</a>#}
+                        {#                                </li>#}
+                        {#                                <li>#}
+                        {#                                    <a href="our-services.html">Our Services</a>#}
+                        {#                                </li>#}
+                        {#                                <li>#}
+                        {#                                    <a href="contact-us.html">Contact Us</a>#}
+                        {#                                </li>#}
+                        {#                            </ul>#}
+                        {#                        </li>#}
                         <li>
-                            <a href="#contact-section">Contact Us</a>
+                            <a href="#contact-section">Наши контакты</a>
                         </li>
                         <li class="icon__profile">
                             {% if not user.is_authenticated %}
