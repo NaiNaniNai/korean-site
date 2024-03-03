@@ -15,6 +15,7 @@ from .models import (
     PartOfLesson,
     Answer,
     Exercise,
+    ModuleUser,
 )
 
 
@@ -180,6 +181,83 @@ class PassingLessonView(View):
                     "is_completed": True,
                 },
             )
+            self.passing_course(user, course_slug, module_slug, exercise)
+
             return JsonResponse({"success": True})
 
         return JsonResponse({"success": False})
+
+    def passing_course(self, user, course_slug, module_slug, exercise):
+        course = Course.objects.filter(slug=course_slug).first()
+
+        module = Module.objects.filter(slug=module_slug).first()
+        user_module = ModuleUser.objects.filter(user=user, module=module).first()
+
+        if not user_module:
+            ModuleUser.objects.create(
+                user=user,
+                module=module,
+            )
+
+        lesson = Lesson.objects.filter(module=module).first()
+        user_lesson = LessonUser.objects.filter(user=user, lesson=lesson).first()
+
+        if not user_lesson:
+            LessonUser.objects.create(
+                user=user,
+                lesson=lesson,
+            )
+
+        part_of_lesson = PartOfLesson.objects.filter(
+            lesson=lesson, slug=exercise.part_of_lesson.slug
+        ).first()
+        part_of_lesson_user = PartOfLessonUser.objects.filter(
+            user=user, part_of_lesson=part_of_lesson
+        ).first()
+
+        if not part_of_lesson_user:
+            PartOfLessonUser.objects.create(user=user, part_of_lesson=part_of_lesson)
+
+        exercises_part_of_lesson = list(part_of_lesson.exercises.values_list("id"))
+        exercises_part_of_lesson_user = list(
+            ExerciseUser.objects.filter(
+                user=user, exercise__part_of_lesson=part_of_lesson, is_completed=True
+            ).values_list("exercise")
+        )
+        if exercises_part_of_lesson == exercises_part_of_lesson_user:
+            PartOfLessonUser.objects.filter(
+                user=user, part_of_lesson=part_of_lesson
+            ).update(is_completed=True)
+
+        parts_of_lesson = list(lesson.parts_of_lesson.values_list("id"))
+        user_parts_of_lesson = list(
+            PartOfLessonUser.objects.filter(
+                user=user, part_of_lesson__lesson=lesson, is_completed=True
+            ).values_list("part_of_lesson")
+        )
+        if parts_of_lesson == user_parts_of_lesson:
+            LessonUser.objects.filter(user=user, lesson=lesson).update(
+                is_completed=True
+            )
+
+        lessons_of_module = list(module.lessons.values_list("id"))
+        user_lessons_of_module = list(
+            LessonUser.objects.filter(
+                user=user, lesson__module=module, is_completed=True
+            ).values_list("lesson")
+        )
+        if lessons_of_module == user_lessons_of_module:
+            ModuleUser.objects.filter(user=user, module=module).update(
+                is_completed=True
+            )
+
+        modules_of_course = list(course.modules.values_list("id"))
+        user_modules_of_course = list(
+            ModuleUser.objects.filter(
+                user=user, module__course=course, is_completed=True
+            ).values_list("module")
+        )
+        if modules_of_course == user_modules_of_course:
+            CourseUser.objects.filter(user=user, course=course).update(
+                is_completed=True
+            )
