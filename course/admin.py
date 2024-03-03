@@ -19,6 +19,7 @@ from course.models import (
     ExerciseUser,
     PartOfLesson,
     PartOfLessonUser,
+    ModuleUser,
 )
 
 
@@ -99,6 +100,11 @@ class VocabularyUserAdmin(admin.ModelAdmin):
 
 @admin.register(CourseUser)
 class CourseUserAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ModuleUser)
+class ModuleUserAdmin(admin.ModelAdmin):
     pass
 
 

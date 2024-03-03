@@ -158,7 +158,7 @@ class Exercise(models.Model):
 
 
 class Word(models.Model):
-    """Class of word"""
+    """Model of word"""
 
     russian_meaning = models.CharField(max_length=256, verbose_name="Русское значение")
     korean_meaning = models.CharField(max_length=256, verbose_name="Корейское значение")
@@ -217,7 +217,7 @@ class DictionaryLesson(models.Model):
 
 
 class VocabularyUser(models.Model):
-    """Class of Vocabulary of user"""
+    """Model of Vocabulary of user"""
 
     user = models.ForeignKey(
         User,
@@ -236,7 +236,7 @@ class VocabularyUser(models.Model):
 
 
 class CourseUser(models.Model):
-    """Class of user's course"""
+    """Model of user's course"""
 
     user = models.ForeignKey(
         User,
@@ -262,8 +262,33 @@ class CourseUser(models.Model):
         return f"{self.user}-{self.course}-{self.is_available}"
 
 
+class ModuleUser(models.Model):
+    """Model of user's moodule"""
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="modules_user",
+        verbose_name="Пользователь",
+    )
+    module = models.ForeignKey(
+        Module,
+        on_delete=models.CASCADE,
+        related_name="modules_user",
+        verbose_name="Модуль",
+    )
+    is_completed = models.BooleanField(default=False, verbose_name="Пройден ли")
+
+    class Meta:
+        verbose_name = "Модуль пользователя"
+        verbose_name_plural = "Модули пользователей"
+
+    def __str__(self):
+        return f"{self.user} - {self.module} - {self.is_completed}"
+
+
 class LessonUser(models.Model):
-    """Class of user's lesson"""
+    """Model of user's lesson"""
 
     user = models.ForeignKey(
         User,
@@ -288,7 +313,7 @@ class LessonUser(models.Model):
 
 
 class PartOfLessonUser(models.Model):
-    """Class of user's part of level"""
+    """Model of user's part of level"""
 
     user = models.ForeignKey(
         User,
@@ -313,7 +338,7 @@ class PartOfLessonUser(models.Model):
 
 
 class ExerciseUser(models.Model):
-    """Class of user's lesson"""
+    """Model of user's lesson"""
 
     user = models.ForeignKey(
         User,
