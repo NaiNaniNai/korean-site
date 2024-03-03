@@ -164,8 +164,10 @@ class PassingLessonView(View):
         user = request.user
         answer_id = request.POST.get("answer_id")
         exercise_id = request.POST.get("exercises_id")
-        exercise = Exercise.objects.filter(id=exercise_id).first()
-        completed_exercise = ExerciseUser.objects.filter(exercise=exercise).first()
+        exercise = Exercise.objects.filter(id=exercise_id)
+        completed_exercise = ExerciseUser.objects.filter(
+            exercise_id=exercise_id, is_completed=True
+        )
 
         if answer_id:
             answer = Answer.objects.filter(id=answer_id).first()
@@ -173,19 +175,21 @@ class PassingLessonView(View):
                 messages.error(request, "Неправильный ответ")
                 return JsonResponse({"fail": True})
 
-        if exercise != completed_exercise:
-            ExerciseUser.objects.update_or_create(
-                user=user,
-                exercise=exercise,
-                defaults={
-                    "is_completed": True,
-                },
-            )
-            self.passing_course(user, course_slug, module_slug, exercise)
+        if list(exercise.values_list("id")) == list(
+            completed_exercise.values_list("exercise")
+        ):
+            return JsonResponse({"success": False})
 
-            return JsonResponse({"success": True})
+        ExerciseUser.objects.update_or_create(
+            user=user,
+            exercise=exercise.first(),
+            defaults={
+                "is_completed": True,
+            },
+        )
+        self.passing_course(user, course_slug, module_slug, exercise.first())
 
-        return JsonResponse({"success": False})
+        return JsonResponse({"success": True})
 
     def passing_course(self, user, course_slug, module_slug, exercise):
         course = Course.objects.filter(slug=course_slug).first()
@@ -222,7 +226,9 @@ class PassingLessonView(View):
         exercises_part_of_lesson_user = list(
             ExerciseUser.objects.filter(
                 user=user, exercise__part_of_lesson=part_of_lesson, is_completed=True
-            ).values_list("exercise")
+            )
+            .order_by("exercise")
+            .values_list("exercise")
         )
         if exercises_part_of_lesson == exercises_part_of_lesson_user:
             PartOfLessonUser.objects.filter(
@@ -233,7 +239,9 @@ class PassingLessonView(View):
         user_parts_of_lesson = list(
             PartOfLessonUser.objects.filter(
                 user=user, part_of_lesson__lesson=lesson, is_completed=True
-            ).values_list("part_of_lesson")
+            )
+            .order_by("part_of_lesson")
+            .values_list("part_of_lesson")
         )
         if parts_of_lesson == user_parts_of_lesson:
             LessonUser.objects.filter(user=user, lesson=lesson).update(
@@ -244,7 +252,9 @@ class PassingLessonView(View):
         user_lessons_of_module = list(
             LessonUser.objects.filter(
                 user=user, lesson__module=module, is_completed=True
-            ).values_list("lesson")
+            )
+            .order_by("lesson")
+            .values_list("lesson")
         )
         if lessons_of_module == user_lessons_of_module:
             ModuleUser.objects.filter(user=user, module=module).update(
@@ -255,7 +265,9 @@ class PassingLessonView(View):
         user_modules_of_course = list(
             ModuleUser.objects.filter(
                 user=user, module__course=course, is_completed=True
-            ).values_list("module")
+            )
+            .order_by("module")
+            .values_list("module")
         )
         if modules_of_course == user_modules_of_course:
             CourseUser.objects.filter(user=user, course=course).update(
