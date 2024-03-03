@@ -139,13 +139,15 @@ function sendAnswerToBackend(button, answerId, courseSlug, moduleSlug, lessonSlu
                     progressBar.innerHTML = `<h4>${completedExercises+1}</h4>`;
                 }
             }
-            else {
-                exerciseMessage.text("Вы уже прошли это упражнение");
-                exerciseMessage.addClass("message_error");
-            }
+            
             if (response.fail) {
                 exerciseMessage.text("Неправильный ответ");
                 exerciseMessage.addClass("message_error");
+            }
+
+            else {
+                exerciseMessage.text("Правильный ответ");
+                exerciseMessage.addClass("message_success");
             }
         }
     });
