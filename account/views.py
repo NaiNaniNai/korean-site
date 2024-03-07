@@ -128,6 +128,7 @@ class ProfileView(View):
         start_week = now_date - datetime.timedelta(now_date.weekday())
         end_week = start_week + datetime.timedelta(7)
 
+        follows = FollowingUsers.objects.filter(user=profile)
         is_followed = FollowingUsers.objects.filter(user=user, following_users=profile)
 
         with connection.cursor() as cursor:
@@ -144,12 +145,22 @@ class ProfileView(View):
             top_online_raws = cursor.fetchall()
 
         top_onlines = []
+        follows_list = list(
+            map(int, [item[0] for item in follows.values_list("following_users")])
+        )
+        onlines_list = []
 
         for top_online_raw in top_online_raws:
             user_id, time_online = top_online_raw
+            onlines_list.append(user_id)
             time_online = math.ceil(time_online / 60)
             online_user = CustomUser.objects.filter(id=user_id).first()
             top_onlines.append({"user": online_user, "time_online": time_online})
+
+        for follow_list in follows_list:
+            if follow_list not in onlines_list:
+                online_user = CustomUser.objects.filter(id=follow_list).first()
+                top_onlines.append({"user": online_user, "time_online": 0})
 
         for available_course in available_courses:
             course = available_course.course
@@ -186,8 +197,6 @@ class ProfileView(View):
                 day_online = week_date_online.date.day
                 time_online = week_date_online.time_online
                 week_days_online[day_online] = time_online
-
-        follows = FollowingUsers.objects.filter(user=profile)
 
         context = {
             "profile": profile,
