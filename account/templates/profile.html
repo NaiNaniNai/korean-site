@@ -129,7 +129,9 @@
                                                  alt="{% static 'images/default-avatar.png' %}">
                                         </div>
                                         <div class="top_rating_profile__username">
-                                            <h6>{{ top_online.user.username }}</h6>
+                                            <a href="{% url 'profile' top_online.user.slug %}">
+                                                <h6>{{ top_online.user.username }}</h6>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="top_rating__online">
