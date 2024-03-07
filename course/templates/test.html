@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block title %}
-    |Регистрация
-{% endblock title %}
-{% block content %}
-    {{ test.text|safe }}
-    {% for question in test.question.all %}{{ question.text }}{% endfor %}
-    {% for answer in test.answers.all %}{{ answer.text }}{% endfor %}
-{% endblock content %}
