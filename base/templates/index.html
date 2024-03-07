@@ -3,6 +3,7 @@
 {% endblock title %}
 {% block content %}
     {% load static %}
+    {% load events_tag %}
     <section class="header_main index_section">
         <div class="main">
             <div class="main_title">
@@ -45,7 +46,7 @@
                     </div>
                     <div class="for_whom_body_item__text">
                         <h3>
-                            Научим тех, кто живет в Корее, лучше понимать местное население в быту, на работе, в миграционной службе, в банках и больницах
+                            events_tag  Научим тех, кто живет в Корее, лучше понимать местное население в быту, на работе, в миграционной службе, в банках и больницах
                         </h3>
                     </div>
                 </div>
@@ -234,13 +235,5 @@
             </div>
         </div>
     </section>
-    <section class="upcoming_events index_section">
-        <!--Тут может быть сделать модель событий-->
-        <div class="events_head">
-            <h1>Мероприятия</h1>
-        </div>
-        <div class="events_body">
-            <div class="event"></div>
-        </div>
-    </section>
+    {% get_events %}
 {% endblock content %}

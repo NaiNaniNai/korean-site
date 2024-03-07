@@ -1,0 +1,33 @@
+<section class="upcoming_events index_section">
+    <div class="events_head">
+        <h1>Мероприятия</h1>
+    </div>
+    <div class="events_body">
+        <div class="events">
+            {% for event in events %}
+                <div class="event">
+                    <div class="event_poster">
+                        <img src="{{ MEDIA_URL }}{{ event.poster.url }}" alt="Упс">
+                    </div>
+                    <div class="event_info">
+                        <div class="event__title">
+                            <h1>
+                                {{ event.title }}
+                                {% if event.is_completed %}Окончено{% endif %}
+                            </h1>
+                        </div>
+                        <div class="event__description">{{ event.description|safe }}</div>
+                        <div class="event_date">
+                            <div class="event__start_date">
+                                <h5>Дата начала: {{ event.start_date }}</h5>
+                            </div>
+                            <div class="event__end_date">
+                                {% if event.end_date %}<h5>Дата окончания: {{ event.end_date }}</h5>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

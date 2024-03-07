@@ -248,6 +248,26 @@ section {
 	text-align: center;
 }
 
+.event {
+	display: flex;
+  	border-radius: 20px;
+  	background: #a9d18e;
+	width: 800px;
+}
+
+.event_poster img{
+	margin: 10px;
+	padding-bottom: 20px;
+	width: 100%;
+	height: 100%;
+	max-width: 350px;
+	max-height: 350px;
+}
+
+.event__title {
+	text-align: center;
+}
+
 /*---------------------
   Profile Detail
 -----------------------*/
