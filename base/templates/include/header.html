@@ -5,32 +5,18 @@
             <div class="col-12">
                 <nav class="main-nav">
                     <div class="logotype">
-                        <a href="index.html" class="logo">
+                        <a href="{% url "index" %}" class="logo">
                             <img src="{% static '/images/logotype.png' %}" alt="korean-site">
                             Chipi school | Школа азиатских языков
                         </a>
                     </div>
                     <ul class="nav">
                         <li>
-                            <a href="{% url "course_list" %}">Главная</a>
+                            <a href="{% url "index" %}">Главная</a>
                         </li>
                         <li>
                             <a href="{% url "course_list" %}">Курсы</a>
                         </li>
-                        {#                        <li class="has-sub">#}
-                        {#                            <a href="">Страницы</a>#}
-                        {#                            <ul class="sub-menu">#}
-                        {#                                <li>#}
-                        {#                                    <a href="about-us.html">About Us</a>#}
-                        {#                                </li>#}
-                        {#                                <li>#}
-                        {#                                    <a href="our-services.html">Our Services</a>#}
-                        {#                                </li>#}
-                        {#                                <li>#}
-                        {#                                    <a href="contact-us.html">Contact Us</a>#}
-                        {#                                </li>#}
-                        {#                            </ul>#}
-                        {#                        </li>#}
                         <li>
                             <a href="#contact-section">Наши контакты</a>
                         </li>

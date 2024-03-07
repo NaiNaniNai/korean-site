@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}
+    |{{ lesson.title }}
+{% endblock title %}
+{% block content %}
+    {% load static %}
+    <section class="header_main index_section">
+        <div class="main">
+            <div class="main_title">
+                <h1>Обучение корейскому языку онлайн</h1>
+            </div>
+            <div class="main_text">
+                <p class="standard_text">
+                    Для тех, кто устал от устаревшей лексики в учебниках и нудных лекций. Изучай только необходимое в корейском языке с Korean Simple
+                </p>
+            </div>
+            <div class="main_button standard_button">
+                <button>Оставить заявку на онлайн консультацию</button>
+            </div>
+        </div>
+    </section>
+    <section class="for_whom index_section">
+        <div class="for__whom">
+            <div class="for_whom_head">
+                <div class="form_whom_head__title">
+                    <h1>Корейский язык для всех</h1>
+                </div>
+                <div class="for_whom_head__text">
+                    <p class="standard_text">Найдем подходящий формат обучения корейскому языку под ваши цели</p>
+                </div>
+            </div>
+            <div class="for_whom_body">
+                <div class="for_whom_body__item">
+                    <div class="for_whom_body_item__title">
+                        <h2>Кому не хватает языковой практики</h2>
+                    </div>
+                    <div class="for_whom_body_item__text">
+                        <h4>
+                            Избавим от страха говорить на корейском, научим думать на корейском, а не переводить с русского и заучивать слова списками
+                        </h4>
+                    </div>
+                </div>
+                <div class="for_whom_body__item">
+                    <div class="for_whom_body_item__title">
+                        <h2>Кто переехал в Корею, но не знает язык</h2>
+                    </div>
+                    <div class="for_whom_body_item__text">
+                        <h3>
+                            Научим тех, кто живет в Корее, лучше понимать местное население в быту, на работе, в миграционной службе, в банках и больницах
+                        </h3>
+                    </div>
+                </div>
+                <div class="for_whom_body__item">
+                    <div class="for_whom_body_item__title">
+                        <h2>Кто хочет переехать</h2>
+                    </div>
+                    <div class="for_whom_body_item__text">
+                        <h3>
+                            Научим корейскому с нуля, расскажем о жизни в Корее, подготовим к сдаче сертификата на знание корейского языка TOPIK (повышает шансы на получение стипендии)
+                        </h3>
+                    </div>
+                </div>
+                <div class="for_whom_body__item">
+                    <div class="for_whom_body_item__title">
+                        <h2>Ребенок ходит в корейскую школу</h2>
+                    </div>
+                    <div class="for_whom_body_item__text">
+                        <h3>Поможем вашему ребенку адаптироваться и привыкнуть к корейской программе, предметам и языку</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="format index_section">
+        <div class="format_head">
+            <div class="format_head__title">
+                <h1>Выберите свой формат</h1>
+            </div>
+            <div class="format_head__text">
+                <div class="format_head__subtitle">
+                    <p class="standard_text">
+                        У вас ненормированный рабочий график или маленький ребенок? Не проблема! Ведь в нашей школе есть несколько форматов обучения, один из которых точно подойдет вам!
+                    </p>
+                </div>
+                <div class="format_head__button standard_button">
+                    <button>Все форматы обучения</button>
+                </div>
+            </div>
+        </div>
+        <div class="format_body">
+            <div class="format_body__items">
+                <div class="format_body__item">
+                    <div class="format_body__item_text">
+                        <div class="format_body_item__title">
+                            <h2>Онлайн-курс</h2>
+                        </div>
+                        <div class="format_body_item__text">
+                            <ul>
+                                <li>Для тех, кто хочет научиться понимать корейцев в повседневной жизни, но времени на обучение не хватает;</li>
+                                <li>Круглосуточный (24/7) доступ к онлайн-платформе с видеоуроками и упражнениями;</li>
+                                <li>Обратная связь с учителем на протяжении курса.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="format_body__item__button standard_button">
+                        <button>Посмотреть программу</button>
+                    </div>
+                </div>
+                <div class="format_body__item">
+                    <div class="format_body__item_text">
+                        <div class="format_body_item__title">
+                            <h2>Индивидуальные занятия</h2>
+                        </div>
+                        <div class="format_body_item__text">
+                            <ul>
+                                <li>Для тех, кому нужен индивидуальный подход и быстрый результат;</li>
+                                <li>Уроки 1 на 1 с преподавателем по персональной программе;</li>
+                                <li>Обратная связь от преподавателя и проверка домашней работы.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="format_body__item__button standard_button">
+                        <button>Посмотреть программу</button>
+                    </div>
+                </div>
+                <div class="format_body__item">
+                    <div class="format_body__item_text">
+                        <div class="format_body_item__title">
+                            <h2>Групповые занятия</h2>
+                        </div>
+                        <div class="format_body_item__text">
+                            <ul>
+                                <li>Для тех, кто хочет позаниматься вместе с друзьями или найти единомышленников;</li>
+                                <li>Больше разговорной практики;</li>
+                                <li>Обратная связь от преподавателя и проверка домашней работы.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="format_body__item__button standard_button">
+                        <button>Посмотреть программу</button>
+                    </div>
+                </div>
+                <div class="format_body__item">
+                    <div class="format_body__item_text">
+                        <div class="format_body_item__title">
+                            <h2>Детский курс</h2>
+                        </div>
+                        <div class="format_body_item__text">
+                            <ul>
+                                <li>Для детей от 8 лет, которые хотят изучать корейский язык;</li>
+                                <li>Индивидуальные занятия со специальными учителями по авторской программе школы (игровой формат); ;</li>
+                                <li>Отправляем родителям отчет об успеваемости.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="format_body__item__button standard_button">
+                        <button>Посмотреть программу</button>
+                    </div>
+                </div>
+                <div class="format_body__item">
+                    <div class="format_body__item_text">
+                        <div class="format_body_item__title">
+                            <h2>Подготовка к топику</h2>
+                        </div>
+                        <div class="format_body_item__text">
+                            <ul>
+                                <li>Для тех, кто хочет сдать экзамен TOPIK I или TOPIK II;</li>
+                                <li>Индивидуальные уроки с учителем длительностью до 60 минут;</li>
+                                <li>Научим решать задания и писать сочинения, дадим всю необходимую лексику под каждый уровень.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="format_body__item__button standard_button">
+                        <button>Посмотреть программу</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="advantages index_section">
+        <div class="advantages_head">
+            <div class="advantages_head__title">
+                <h1>Почему ученики выбирают нас?</h1>
+            </div>
+        </div>
+        <div class="advantages_body">
+            <div class="advantages">
+                <ul>
+                    <li>
+                        <h4>Доступные цены.</h4>
+                    </li>
+                    <li>
+                        <h4>Постоянные тематические групповые занятия.</h4>
+                    </li>
+                    <li>
+                        <h4>Возможность отслеживать свой прогресс в своём профиле.</h4>
+                    </li>
+                    <li>
+                        <h4>Возможность заниматься вместе со своими друзьями даже на онлайн курсах!</h4>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section class="our_team index_section">
+        <div class="our_team_head">
+            <h1>Достигайте целей с преподавателями</h1>
+            <p>
+                Владеют корейским языком на высоком уровне (5-6 уровень TOPIK), живут в языковой среде, учатся или закончили топовые университеты Южной Кореи
+            </p>
+        </div>
+        <div class="our_team__body">
+            <div class="our_team_body_teacher">
+                <div class="our_team_body_teacher__avatar">
+                    <img src="{% static 'images/teacher_avatar/kim_chin_in.png' %}" alt="ss">
+                </div>
+                <div class="our_team_body_teacher__info">
+                    <div class="our_team_body_teacher__name">
+                        <h1>Kim Jong In</h1>
+                    </div>
+                    <div class="our_team_body_teacher__status">
+                        <h3>Учитель корейского языка. Высший руководитель КНДР. TOPIK 6</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="upcoming_events index_section">
+        <!--Тут может быть сделать модель событий-->
+        <div class="events_head">
+            <h1>Мероприятия</h1>
+        </div>
+        <div class="events_body">
+            <div class="event"></div>
+        </div>
+    </section>
+{% endblock content %}

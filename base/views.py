@@ -1,7 +1,9 @@
 from datetime import timedelta, datetime
 
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.utils import timezone
+from django.views import View
 
 from account.models import OnlineUser
 
@@ -42,3 +44,10 @@ def update_last_online(request):
         return JsonResponse({"message": "Last online updated successfully"})
     else:
         return JsonResponse({"error": "User is not authenticated"}, status=401)
+
+
+class IndexView(View):
+    """View of index page"""
+
+    def get(self, request):
+        return render(request, "index.html")
