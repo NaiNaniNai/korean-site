@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "base",
     "account",
     "course",
+    "events",
     "silk",
 ]
 

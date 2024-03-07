@@ -102,7 +102,7 @@ class OnlineUser(models.Model):
 
 
 class Teacher(models.Model):
-    """Class of teachers"""
+    """Model of teachers"""
 
     user = models.ForeignKey(
         CustomUser,
