@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data: {
                 labels: Object.keys(monthResultData),
                 datasets: [{
-                    label: 'Время онлайн в минутах за месяц',
+                    label: 'Время онлайн в минутах',
                     data: Object.values(monthResultData),
                     backgroundColor: 'rgba(169, 209, 142, 0.6)',
                     borderColor: 'rgba(169, 209, 142, 1)',
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Время онлайн в минутах за неделю',
+                    label: 'Время онлайн в минутах',
                     data: Object.values(weekResultData),
                     backgroundColor: 'rgba(169, 209, 142, 0.6)',
                     borderColor: 'rgba(169, 209, 142, 1)',
