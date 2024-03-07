@@ -230,12 +230,14 @@ section {
 }
 
 
-
 .our_team_body_teacher__avatar img {
 	width: 200px;
 	height: 200px;
 }
 
+.our_team_body_teacher__name {
+	display: flex;
+}
 
 .format_body__item__button {
 	position: absolute;

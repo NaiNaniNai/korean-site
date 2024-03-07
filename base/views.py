@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
 
-from account.models import OnlineUser
+from account.models import OnlineUser, Teacher
 
 
 def update_last_online(request):
@@ -50,4 +50,8 @@ class IndexView(View):
     """View of index page"""
 
     def get(self, request):
-        return render(request, "index.html")
+        teachers = Teacher.objects.all()
+        context = {
+            "teachers": teachers,
+        }
+        return render(request, "index.html", context)
