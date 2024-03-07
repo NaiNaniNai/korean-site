@@ -5,13 +5,33 @@
 	display: flex;
 }
 
-.logo {
+.standard_button button {
+	margin: 10px auto 0;
+	display: block;
+	font-size: 12px;
+	color: #ffffff;
+	background: #a9d18e;
+	font-weight: 700;
+	border: none;
+	border-radius: 2px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 12px 30px;
+}
+
+.standard_text {
+	font-size: 1.2em;
+}
+
+.logotype a {
 	margin-top: -0.5em;
 	margin-left: 2em;
 	color: white;
 	font-size: 12px;
 	margin-right: 33em;
+
 }
+
 .logo img {
 	width: 4.5em;
 }
@@ -149,6 +169,81 @@ section {
 	padding-left: 0 !important;
 	max-width: 45px;
 	max-height: 50px;
+}
+
+/*---------------------
+  Index Page
+-----------------------*/
+
+.index_section {
+	margin-left: 6em;
+	margin-right: 6em;
+}
+
+.main {
+	text-align: center;
+}
+
+.main_title {
+	font-weight: bold;
+}
+
+.main_text p {
+}
+
+.main_button button {
+}
+
+.for_whom_head {
+	text-align: center;
+}
+
+.for_whom_body__item {
+	margin-top: 1em;
+}
+
+.for_whom_body_item__title {
+	text-align: center;
+}
+
+.format_head {
+	text-align: center;
+}
+
+.format_body {
+	margin-top: 2em;
+}
+.format_body__items {
+	margin-top: 1em;
+	display: inline-flex;
+}
+
+.format_body__item {
+	position: relative;
+	height: 340px;
+	margin-right: 2em;
+}
+
+.format_body_item__title {
+	text-align: center;
+	height: 6.5em;
+}
+
+
+
+.our_team_body_teacher__avatar img {
+	width: 200px;
+	height: 200px;
+}
+
+
+.format_body__item__button {
+	position: absolute;
+	bottom: 0;
+}
+
+.advantages_head {
+	text-align: center;
 }
 
 /*---------------------
@@ -294,6 +389,10 @@ section {
 .top_rating_profile__username {
 	margin-left: 20px;
 	margin-top: 13px;
+}
+
+.top_rating_profile__username a {
+	color:black;
 }
 
 .top_rating__online {
