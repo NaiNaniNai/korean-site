@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from account.models import CustomUser, FollowingUsers, OnlineUser
+from account.models import CustomUser, FollowingUsers, OnlineUser, Teacher
 
 
 @admin.register(CustomUser)
@@ -23,4 +23,11 @@ class OnlineUserAdmin(admin.ModelAdmin):
     """Model of online user in admin panel"""
 
     list_display = ("user", "date", "time_online")
+    list_display_links = ("user",)
+
+
+@admin.register(Teacher)
+class TeacherAdmin(admin.ModelAdmin):
+
+    list_display = ("user",)
     list_display_links = ("user",)

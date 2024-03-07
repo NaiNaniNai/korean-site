@@ -209,18 +209,28 @@
             </p>
         </div>
         <div class="our_team__body">
-            <div class="our_team_body_teacher">
-                <div class="our_team_body_teacher__avatar">
-                    <img src="{% static 'images/teacher_avatar/kim_chin_in.png' %}" alt="ss">
-                </div>
-                <div class="our_team_body_teacher__info">
-                    <div class="our_team_body_teacher__name">
-                        <h1>Kim Jong In</h1>
+            <div class="our_team_body_teachers">
+                {% for teacher in teachers %}
+                    <div class="our_team_body_teacher">
+                        <div class="our_team_body_teacher__avatar">
+                            <img src="{{ MEDIA_URL }}{{ teacher.user.avatar.url }}"
+                                 alt="{% static 'images/default-avatar.png' %}">
+                        </div>
+                        <div class="our_team_body_teacher__info">
+                            <div class="our_team_body_teacher__name">
+                                <div class="our_team_teacher__last_name">
+                                    <h1>{{ teacher.user.last_name }}&nbsp;</h1>
+                                </div>
+                                <div class="our_team_teacher__first_name">
+                                    <h1>{{ teacher.user.first_name }}</h1>
+                                </div>
+                            </div>
+                            <div class="our_team_body_teacher__status">
+                                <h3>{{ teacher.status }}</h3>
+                            </div>
+                        </div>
                     </div>
-                    <div class="our_team_body_teacher__status">
-                        <h3>Учитель корейского языка. Высший руководитель КНДР. TOPIK 6</h3>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
