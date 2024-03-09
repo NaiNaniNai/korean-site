@@ -10,10 +10,6 @@ from course.models import (
     Exercise,
     Question,
     Answer,
-    Word,
-    DictionaryCourse,
-    DictionaryLesson,
-    VocabularyUser,
     CourseUser,
     LessonUser,
     ExerciseUser,
@@ -71,31 +67,11 @@ class AnswerAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Word)
-class WordAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(Exercise)
 class ExerciseAdmin(admin.ModelAdmin):
     """Model Exercise in admin panel"""
 
     form = ExerciseAdminForm
-
-
-@admin.register(DictionaryCourse)
-class DictionaryCourseAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(DictionaryLesson)
-class DictionaryLessonAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(VocabularyUser)
-class VocabularyUserAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(CourseUser)
