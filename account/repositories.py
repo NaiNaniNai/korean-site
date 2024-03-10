@@ -98,3 +98,12 @@ class UserRepository:
     @staticmethod
     def unfollow_user(user: User, profile: User):
         FollowingUsers.objects.filter(user=user, following_users=profile).delete()
+
+    @staticmethod
+    def get_user_for_username(username: str) -> User:
+        return CustomUser.objects.filter(username=username)
+
+    @staticmethod
+    def change_password(user: User, new_password: str):
+        user.set_password(new_password)
+        user.save()

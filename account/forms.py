@@ -47,3 +47,26 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = UserModel
         fields = ("avatar", "last_name", "first_name", "date_of_birth")
+
+
+class ResetPasswordForm(forms.ModelForm):
+    """Form of reset password in account"""
+
+    username = forms.CharField(
+        label="user", widget=forms.TextInput(attrs={"placeholder": "Имя пользователя"})
+    )
+    email = forms.EmailField(
+        label="envelope",
+        widget=forms.EmailInput(attrs={"placeholder": "Электронная почта"}),
+    )
+    password = forms.CharField(
+        label="lock", widget=forms.PasswordInput(attrs={"placeholder": "Новый пароль"})
+    )
+    repeated_password = forms.CharField(
+        label="lock",
+        widget=forms.PasswordInput(attrs={"placeholder": "Повторите пароль"}),
+    )
+
+    class Meta:
+        model = UserModel
+        fields = ("username", "email", "password", "repeated_password")

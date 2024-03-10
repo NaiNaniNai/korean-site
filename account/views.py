@@ -1,36 +1,30 @@
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView
 
-from account.forms import SingupForm, EditProfileForm
-from account.models import CustomUser
+from account.forms import SingupForm, EditProfileForm, ResetPasswordForm
 from account.services import (
     ProfileService,
     EditProfileService,
     FolloworUnfollowUserService,
+    ResetPasswordService,
 )
 
 
-class SinginView(View):
-    """Login in site"""
+class SinginView(FormView):
+    """View of login in site"""
 
-    def get(self, request):
-        return render(request, "singin.html")
+    form_class = AuthenticationForm
+    template_name = "singin.html"
+    success_url = reverse_lazy("index")
 
-    def post(self, request):
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect(reverse("index"))
-
-        messages.error(request, "Ошибка в логине или пароле!")
-        return redirect(reverse("singin"))
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        return redirect(self.get_success_url())
 
 
 def logout_view(request):
@@ -41,7 +35,7 @@ def logout_view(request):
 
 
 class SingupView(FormView):
-    """Singup in anime site"""
+    """View of registration in site"""
 
     form_class = SingupForm
     template_name = "singup.html"
@@ -49,35 +43,26 @@ class SingupView(FormView):
 
     def form_valid(self, form):
         form.save()
-        return super().form_valid(form)
+        return redirect(self.get_success_url())
 
 
 class ResetPasswordView(View):
-    """Reset password"""
+    """View of reset password account"""
 
     def get(self, request):
-        return render(request, "reset_password.html")
+        form = ResetPasswordForm
+        service = ResetPasswordService(request, form)
+        context = service.get()
+
+        return render(request, "reset_password.html", context)
 
     def post(self, request):
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        new_password = request.POST.get("password1")
-        repeat_new_password = request.POST.get("password2")
-        user = CustomUser.objects.filter(username=username).first()
-        if (
-            user
-            and user.email == email
-            and new_password
-            and new_password == repeat_new_password
-        ):
-            user.set_password(new_password)
-            user.save()
-            messages.success(request, "Пароль был успешно обновлён.")
-            return redirect(reverse("singin"))
-        messages.error(
-            request, "Ошибка в имени пользователя, электронной почте или пароле."
-        )
-        return redirect(reverse("reset_password"))
+        form = ResetPasswordForm
+        service = ResetPasswordService(request, form)
+        context = service.post()
+        if context:
+            return redirect(reverse("reset_password"))
+        return redirect(reverse("singin"))
 
 
 class ProfileView(View):

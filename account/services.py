@@ -200,3 +200,75 @@ class FolloworUnfollowUserService:
         if message == "follow":
             text_message = f"Вы подписались на пользователя {profile.username}"
         return messages.success(self.request, text_message)
+
+
+class ResetPasswordService:
+    """Service for view reset password user"""
+
+    def __init__(self, request, form):
+        self.request = request
+        self.form = form
+
+    def get(self) -> dict:
+        return {
+            "form": self.form,
+        }
+
+    def post(self):
+        (
+            username,
+            email,
+            new_password,
+            repeat_new_password,
+        ) = self.get_info_from_request()
+        user, user_email = self.get_user_email(username)
+        is_authenticity = self.check_authenticity(
+            email, user_email, new_password, repeat_new_password
+        )
+        if not is_authenticity:
+            return self.get_context_data()
+        self.change_password(user, new_password)
+        return
+
+    def get_info_from_request(self) -> tuple:
+        username = self.request.POST.get("username")
+        email = self.request.POST.get("email")
+        new_password = self.request.POST.get("password")
+        repeat_new_password = self.request.POST.get("repeated_password")
+        return username, email, new_password, repeat_new_password
+
+    def get_user_email(self, username) -> tuple:
+        user = UserRepository.get_user_for_username(username).first()
+        if not user:
+            return None, None
+        user_email = user.email
+        return user, user_email
+
+    def check_email_authentication(self, email, user_email) -> bool:
+        if email != user_email:
+            return False
+        return True
+
+    def check_passwords_match(self, new_password, repeat_new_password) -> bool:
+        if new_password != repeat_new_password:
+            return False
+        return True
+
+    def check_authenticity(
+        self, email, user_email, new_password, repeat_new_password
+    ) -> bool:
+        authenticity_email = self.check_email_authentication(email, user_email)
+        authenticity_password = self.check_passwords_match(
+            new_password, repeat_new_password
+        )
+        if authenticity_email and authenticity_password:
+            return True
+        return False
+
+    def change_password(self, user, new_password):
+        UserRepository.change_password(user, new_password)
+
+    def get_context_data(self) -> messages:
+        return {"Error": "True"}, messages.error(
+            self.request, "Ошибка в имени пользователя, электронной почте или пароле."
+        )
