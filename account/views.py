@@ -8,7 +8,6 @@ from django.views.generic import FormView
 from account.forms import SingupForm, EditProfileForm
 from account.models import CustomUser, FollowingUsers
 from account.services import ProfileService, EditProfileService
-from project_root.settings import BASE_DIR
 
 
 class SinginView(View):
@@ -84,12 +83,6 @@ class ProfileView(View):
         service = ProfileService(request)
         context = service.get(profile_slug)
         return render(request, "profile.html", context)
-
-
-def handle_uploaded_file(f):
-    with open(f"{BASE_DIR}/media/avatars/{f.name}", "wb+") as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
 
 
 class EditProfileView(View):
