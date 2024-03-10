@@ -31,22 +31,12 @@
             <div class="edit_profile_detail__form">
                 <form class="edit_profile" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="input__item">
-                        <h4>Изображение:</h4>
-                        <input type="file" name="avatar" id="avatar" accept="image/png, image/jpeg">
-                    </div>
-                    <div class="input__item">
-                        <h4>Фамилия:</h4>
-                        <input type="text" name="last_name" id="last_name" placeholder="Фамилия">
-                    </div>
-                    <div class="input__item">
-                        <h4>Имя:</h4>
-                        <input type="text" name="first_name" id="first_name" placeholder="Имя">
-                    </div>
-                    <div class="input__item">
-                        <h4>Дата рождения:</h4>
-                        <input type="date" name="date_of_birth" id="date_of_birth">
-                    </div>
+                    {% for field in form %}
+                        <div class="input__item">
+                            <h4>{{ field.label }}:</h4>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
                     <button type="submit" class="site-btn">Подтвердить изменения.</button>
                 </form>
             </div>
