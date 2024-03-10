@@ -11,5 +11,9 @@ urlpatterns = [
     path(
         "<str:profile_slug>/edit", views.EditProfileView.as_view(), name="edit_profile"
     ),
-    path("<slug:profile_slug>/add_following", views.get_following_user, name="follow"),
+    path(
+        "<slug:profile_slug>/add_following",
+        views.follow_or_unfollow_user,
+        name="follow",
+    ),
 ]

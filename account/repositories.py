@@ -90,3 +90,11 @@ class UserRepository:
                 "avatar": avatar,
             },
         )
+
+    @staticmethod
+    def follow_user(user: User, profile: User):
+        FollowingUsers.objects.create(user=user, following_users=profile)
+
+    @staticmethod
+    def unfollow_user(user: User, profile: User):
+        FollowingUsers.objects.filter(user=user, following_users=profile).delete()

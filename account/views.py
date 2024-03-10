@@ -6,8 +6,12 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView
 
 from account.forms import SingupForm, EditProfileForm
-from account.models import CustomUser, FollowingUsers
-from account.services import ProfileService, EditProfileService
+from account.models import CustomUser
+from account.services import (
+    ProfileService,
+    EditProfileService,
+    FolloworUnfollowUserService,
+)
 
 
 class SinginView(View):
@@ -103,29 +107,10 @@ class EditProfileView(View):
         return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))
 
 
-def get_following_user(request, profile_slug):
-    """Add following anime on user"""
+def follow_or_unfollow_user(request, profile_slug):
+    """Following or unfollowing a user from another user"""
 
     if request.method == "GET":
-        followed_user = CustomUser.objects.filter(slug=profile_slug).first()
-        user = request.user
-        if followed_user == user:
-            messages.error(request, "Вы не можете подписаться на самого себя!")
-            return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))
-        if FollowingUsers.objects.filter(
-            user_id=user.id, following_users_id=followed_user.id
-        ):
-            FollowingUsers.objects.filter(
-                user_id=user.id, following_users_id=followed_user.id
-            ).delete()
-            messages.success(
-                request, f"Вы отписались от пользователя {followed_user.username}"
-            )
-        else:
-            FollowingUsers.objects.filter(user=user).create(
-                user_id=user.id, following_users_id=followed_user.id
-            )
-            messages.success(
-                request, f"Вы подписались на пользователя {followed_user.username}"
-            )
+        service = FolloworUnfollowUserService(request)
+        service.get(profile_slug)
         return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))

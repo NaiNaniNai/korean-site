@@ -2,6 +2,7 @@ import datetime
 import json
 import math
 
+from django.contrib import messages
 from django.utils import timezone
 
 from account.repositories import UserRepository
@@ -133,14 +134,14 @@ class EditProfileService:
         form = self.form
         return {"profile": profile, "form": form}
 
-    def post(self, slug):
+    def post(self, slug) -> None:
         profile = UserRepository.get_by_slug(slug)
         date_of_birth, last_name, first_name, avatar = self.get_info_from_request(
             profile
         )
         self.update_user_info(profile, date_of_birth, last_name, first_name, avatar)
 
-    def handle_uploaded_file(self, file):
+    def handle_uploaded_file(self, file) -> None:
         with open(f"{BASE_DIR}/media/avatars/{file.name}", "wb+") as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
@@ -162,7 +163,40 @@ class EditProfileService:
 
         return date_of_birth, last_name, first_name, avatar
 
-    def update_user_info(self, profile, date_of_birth, last_name, first_name, avatar):
+    def update_user_info(
+        self, profile, date_of_birth, last_name, first_name, avatar
+    ) -> None:
         UserRepository.update_user_info(
             profile, date_of_birth, last_name, first_name, avatar
         )
+
+
+class FolloworUnfollowUserService:
+    """Service for view a user's follow or unfollow to another user"""
+
+    def __init__(self, request):
+        self.request = request
+
+    def get(self, slug) -> messages:
+        user = UserRepository.get_from_request(self.request)
+        profile = UserRepository.get_by_slug(slug)
+        if profile == user:
+            return self.get_context_data("error", profile)
+
+        is_followed = UserRepository.check_following(user, profile)
+        if is_followed:
+            UserRepository.unfollow_user(user, profile)
+            return self.get_context_data("unfollow", profile)
+
+        UserRepository.follow_user(user, profile)
+        return self.get_context_data("follow", profile)
+
+    def get_context_data(self, message, profile) -> messages:
+        if message == "error":
+            return messages.error(
+                self.request, "Вы не можете подписаться на самого себя!"
+            )
+        text_message = f"Вы отписались от пользователя {profile.username}"
+        if message == "follow":
+            text_message = f"Вы подписались на пользователя {profile.username}"
+        return messages.success(self.request, text_message)
