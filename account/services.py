@@ -5,6 +5,7 @@ import math
 from django.utils import timezone
 
 from account.repositories import UserRepository
+from project_root.settings import BASE_DIR
 
 
 class ProfileService:
@@ -13,7 +14,7 @@ class ProfileService:
     def __init__(self, request):
         self.request = request
 
-    def get(self, slug):
+    def get(self, slug) -> dict:
         now_date = timezone.localtime(timezone.now())
         user, profile = self.get_user_and_profile(slug)
 
@@ -29,6 +30,7 @@ class ProfileService:
         courses_data = self.get_courses_data(available_courses)
         month_days_online = self.get_month_days_online(profile, now_date.month)
         week_days_online = self.get_week_days_online(profile, now_date)
+
         return {
             "profile": profile,
             "is_authenticated": True,
@@ -44,11 +46,13 @@ class ProfileService:
     def get_user_and_profile(self, slug) -> tuple:
         user = UserRepository.get_from_request(self.request)
         profile = UserRepository.get_by_slug(slug)
+
         return user, profile
 
     def get_follows_info(self, user, profile) -> tuple:
         follows = UserRepository.get_follows(user)
         is_followed = UserRepository.check_following(user, profile)
+
         return follows, is_followed
 
     def get_top_online(self, profile, follows, month) -> list:
@@ -93,17 +97,16 @@ class ProfileService:
     def get_month_days_online(self, profile, month) -> dict:
         month_online = UserRepository.get_online_per_month(profile, month)
         month_days_online = {}
+
         if month_online:
             for day_online in month_online:
                 day = day_online.date.day
                 time_online = day_online.time_online
                 month_days_online[day] = time_online
 
-        print(month_days_online)
         return month_days_online
 
-    @staticmethod
-    def get_week_days_online(profile, now_date) -> dict:
+    def get_week_days_online(self, profile, now_date) -> dict:
         start_week = now_date - datetime.timedelta(now_date.weekday())
         end_week = start_week + datetime.timedelta(7)
         week_online = UserRepository.get_online_per_week(profile, start_week, end_week)
@@ -114,5 +117,52 @@ class ProfileService:
                 day = day_online.date.day
                 time_online = day_online.time_online
                 week_days_online[day] = time_online
-        print(week_days_online)
+
         return week_days_online
+
+
+class EditProfileService:
+    """Service for view profile edit"""
+
+    def __init__(self, request, form):
+        self.request = request
+        self.form = form
+
+    def get(self, slug) -> dict:
+        profile = UserRepository.get_by_slug(slug)
+        form = self.form
+        return {"profile": profile, "form": form}
+
+    def post(self, slug):
+        profile = UserRepository.get_by_slug(slug)
+        date_of_birth, last_name, first_name, avatar = self.get_info_from_request(
+            profile
+        )
+        self.update_user_info(profile, date_of_birth, last_name, first_name, avatar)
+
+    def handle_uploaded_file(self, file):
+        with open(f"{BASE_DIR}/media/avatars/{file.name}", "wb+") as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+    def get_info_from_request(self, profile) -> tuple:
+        date_of_birth = profile.date_of_birth
+        last_name = profile.last_name
+        first_name = profile.first_name
+        avatar = profile.avatar
+        if self.request.POST.get("date_of_birth"):
+            date_of_birth = self.request.POST.get("date_of_birth")
+        if self.request.POST.get("last_name"):
+            last_name = self.request.POST.get("last_name")
+        if self.request.POST.get("first_name"):
+            first_name = self.request.POST.get("first_name")
+        if self.request.FILES.get("avatar"):
+            self.handle_uploaded_file(self.request.FILES["avatar"])
+            avatar = self.request.FILES["avatar"]
+
+        return date_of_birth, last_name, first_name, avatar
+
+    def update_user_info(self, profile, date_of_birth, last_name, first_name, avatar):
+        UserRepository.update_user_info(
+            profile, date_of_birth, last_name, first_name, avatar
+        )

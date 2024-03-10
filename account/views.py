@@ -5,9 +5,9 @@ from django.views import View
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView
 
-from account.forms import SingupForm
+from account.forms import SingupForm, EditProfileForm
 from account.models import CustomUser, FollowingUsers
-from account.services import ProfileService
+from account.services import ProfileService, EditProfileService
 from project_root.settings import BASE_DIR
 
 
@@ -96,37 +96,17 @@ class EditProfileView(View):
     """Edit page of profile"""
 
     def get(self, request, profile_slug):
-        profile = CustomUser.objects.filter(slug=profile_slug).first()
-        context = {
-            "profile": profile,
-        }
+        form = EditProfileForm
+        service = EditProfileService(request, form)
+        context = service.get(profile_slug)
 
         return render(request, "edit_profile.html", context)
 
     def post(self, request, profile_slug):
-        profile = CustomUser.objects.filter(slug=profile_slug).first()
-        date_of_birth = profile.date_of_birth
-        last_name = profile.last_name
-        first_name = profile.first_name
-        avatar = profile.avatar
-        if request.POST.get("date_of_birth"):
-            date_of_birth = request.POST.get("date_of_birth")
-        if request.POST.get("last_name"):
-            last_name = request.POST.get("last_name")
-        if request.POST.get("first_name"):
-            first_name = request.POST.get("first_name")
-        if request.FILES.get("avatar"):
-            handle_uploaded_file(request.FILES["avatar"])
-            avatar = request.FILES["avatar"]
-        CustomUser.objects.update_or_create(
-            username=profile.username,
-            defaults={
-                "date_of_birth": date_of_birth,
-                "last_name": last_name,
-                "first_name": first_name,
-                "avatar": avatar,
-            },
-        )
+        form = EditProfileForm
+        service = EditProfileService(request, form)
+        service.post(profile_slug)
+
         return redirect(reverse("profile", kwargs={"profile_slug": profile_slug}))
 
 

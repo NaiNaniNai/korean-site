@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db import connection
 from django.db.models import QuerySet
 
-from account.models import FollowingUsers, OnlineUser
+from account.models import FollowingUsers, OnlineUser, CustomUser
 from course.models import Course, LessonUser, Lesson
 
 
@@ -76,3 +76,17 @@ class UserRepository:
         user: User, start_week: date, end_week: date
     ) -> QuerySet[OnlineUser]:
         return OnlineUser.objects.filter(user=user, date__range=[start_week, end_week])
+
+    @staticmethod
+    def update_user_info(
+        user: User, date_of_birth: date, last_name: str, first_name: str, avatar: str
+    ):
+        CustomUser.objects.update_or_create(
+            username=user.username,
+            defaults={
+                "date_of_birth": date_of_birth,
+                "last_name": last_name,
+                "first_name": first_name,
+                "avatar": avatar,
+            },
+        )
