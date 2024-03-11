@@ -5,7 +5,7 @@ import math
 from django.contrib import messages
 from django.utils import timezone
 
-from account.repositories import UserRepository
+from account.repository import UserRepository
 from project_root.settings import BASE_DIR
 
 

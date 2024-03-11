@@ -1,8 +1,7 @@
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.views import View
-from django.views.generic import ListView
 
 from .models import (
     Course,
@@ -17,38 +16,24 @@ from .models import (
     Exercise,
     ModuleUser,
 )
+from .service import CourseListService, CourseDetailService, PassingCourseService
 
 
-class CourseListView(ListView):
+class CourseListView(View):
     """List of courses"""
 
-    model = Course
-    queryset = Course.objects.filter(is_draft=False)
-    template_name = "course_list.html"
+    def get(self, request):
+        service = CourseListService(request)
+        context = service.get()
+        return render(request, "course_list.html", context)
 
 
 class CourseDetailView(View):
     """Detail info of course"""
 
     def get(self, request, course_slug):
-        course = (
-            Course.objects.filter(slug=course_slug)
-            .prefetch_related("modules", "modules__lessons")
-            .first()
-        )
-        modules = course.modules.all()
-
-        lessons = []
-        for module in modules:
-            lessons += list(module.lessons.all())
-
-        lessons_count = len(lessons)
-        context = {
-            "course": course,
-            "modules": modules,
-            "lessons_count": lessons_count,
-        }
-
+        service = CourseDetailService(request)
+        context = service.get(course_slug)
         return render(request, "course_detail.html", context)
 
 
@@ -56,58 +41,8 @@ class PassingCourseView(View):
     """Passing the course"""
 
     def get(self, request, course_slug):
-        course = get_object_or_404(
-            Course.objects.prefetch_related(
-                "modules", "modules__lessons", "modules__lessons__parts_of_lesson"
-            ),
-            slug=course_slug,
-        )
-        modules = course.modules.all()
-        user = request.user
-        is_available = False
-
-        context = {
-            "is_avialable": is_available,
-        }
-
-        if not user.id:
-            return render(request, "passing_course.html", context)
-
-        user_course = (
-            CourseUser.objects.filter(course=course, user=user)
-            .select_related("course", "user")
-            .first()
-        )
-        if user_course:
-            is_available = True
-
-        modules_data = []
-        for module in modules:
-            completed_lessons = LessonUser.objects.filter(
-                user=user, lesson__module=module, is_completed=True
-            )
-            lessons_data = []
-            for lesson in module.lessons.all():
-                completed_part = PartOfLessonUser.objects.filter(
-                    user=user, part_of_lesson__lesson=lesson, is_completed=True
-                )
-                lessons_data.append(
-                    {"lesson": lesson, "completed_part": completed_part}
-                )
-            modules_data.append(
-                {
-                    "module": module,
-                    "completed_lessons": completed_lessons,
-                    "lessons_data": lessons_data,
-                }
-            )
-        context = {
-            "course": course,
-            "modules": modules,
-            "user_course": user_course,
-            "is_available": is_available,
-            "modules_data": modules_data,
-        }
+        service = PassingCourseService(request)
+        context = service.get(course_slug)
         return render(request, "passing_course.html", context)
 
 
