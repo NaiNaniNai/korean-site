@@ -40,7 +40,7 @@ class CourseDetailService:
     def get_count_of_lessons_in_course(self, modules):
         count_of_lessons = 0
         for module in modules:
-            count_of_lessons += CourseRepository.get_count_lessons_of_module(module)
+            count_of_lessons += ModuleRepository.get_count_lessons_of_module(module)
         return count_of_lessons
 
 
@@ -72,10 +72,10 @@ class PassingCourseService:
     def get_modules_data(self, user, modules) -> list:
         modules_data = []
         for module in modules:
-            completed_lessons = CourseRepository.get_user_completed_lessons_of_module(
+            completed_lessons = LessonRepository.get_user_completed_lessons_of_module(
                 user, module
             )
-            lessons = CourseRepository.get_lessons_of_module(module)
+            lessons = ModuleRepository.get_lessons_of_module(module)
             lessons_data = self.get_lessons_data(user, lessons)
             modules_data.append(
                 {
@@ -89,7 +89,7 @@ class PassingCourseService:
     def get_lessons_data(self, user, lessons) -> list:
         lessons_data = []
         for lesson in lessons:
-            completed_part = CourseRepository.get_user_completed_part_of_lessons(
+            completed_part = PartOfLessonRepository.get_user_completed_part_of_lessons(
                 user, lesson
             )
             lessons_data.append({"lesson": lesson, "completed_part": completed_part})

@@ -20,10 +20,6 @@ class CourseRepository:
     """Class for interacting with the course model"""
 
     @staticmethod
-    def get_by_id(id: int) -> Course:
-        return Course.objects.filter(id=id)
-
-    @staticmethod
     def get_by_slug(slug: str) -> Course:
         return (
             Course.objects.filter(slug=slug)
@@ -42,33 +38,11 @@ class CourseRepository:
         return course.modules.all()
 
     @staticmethod
-    def get_lessons_of_module(module: Module) -> QuerySet[Lesson]:
-        return module.lessons.all()
-
-    @staticmethod
-    def get_count_lessons_of_module(module: Module) -> int:
-        return module.lessons.count()
-
-    @staticmethod
     def check_available_course(user: User, course: Course) -> bool:
         user_course = CourseUser.objects.filter(user=user, course=course)
         if not user_course:
             return False
         return True
-
-    @staticmethod
-    def get_user_completed_lessons_of_module(
-        user: User, module: Module
-    ) -> QuerySet[LessonUser]:
-        return LessonUser.objects.filter(
-            user=user, lesson__module=module, is_completed=True
-        )
-
-    @staticmethod
-    def get_user_completed_part_of_lessons(
-        user: User, lesson: Lesson
-    ) -> QuerySet[PartOfLessonUser]:
-        return PartOfLessonUser.objects.filter(user=user, part_of_lesson__lesson=lesson)
 
     @staticmethod
     def update_user_course(user: User, course: Course) -> None:
@@ -81,6 +55,14 @@ class ModuleRepository:
     @staticmethod
     def get_by_slug(slug: str) -> Module:
         return Module.objects.filter(slug=slug).first()
+
+    @staticmethod
+    def get_lessons_of_module(module: Module) -> QuerySet[Lesson]:
+        return module.lessons.all()
+
+    @staticmethod
+    def get_count_lessons_of_module(module: Module) -> int:
+        return module.lessons.count()
 
     @staticmethod
     def check_user_module(user: User, module: Module) -> bool:
@@ -115,6 +97,14 @@ class LessonRepository:
         return Lesson.objects.filter(module=module).first()
 
     @staticmethod
+    def get_user_completed_lessons_of_module(
+        user: User, module: Module
+    ) -> QuerySet[LessonUser]:
+        return LessonUser.objects.filter(
+            user=user, lesson__module=module, is_completed=True
+        )
+
+    @staticmethod
     def check_user_lesson(user: User, lesson: Lesson) -> bool:
         if not LessonUser.objects.filter(user=user, lesson=lesson):
             return False
@@ -147,6 +137,12 @@ class PartOfLessonRepository:
         return PartOfLesson.objects.filter(
             lesson=lesson, slug=exercise.part_of_lesson.slug
         ).first()
+
+    @staticmethod
+    def get_user_completed_part_of_lessons(
+        user: User, lesson: Lesson
+    ) -> QuerySet[PartOfLessonUser]:
+        return PartOfLessonUser.objects.filter(user=user, part_of_lesson__lesson=lesson)
 
     @staticmethod
     def check_user_part_of_lesson(
