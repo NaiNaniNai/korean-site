@@ -37,7 +37,7 @@ class CourseDetailService:
             "count_of_lessons": count_of_lessons,
         }
 
-    def get_count_of_lessons_in_course(self, modules):
+    def get_count_of_lessons_in_course(self, modules) -> int:
         count_of_lessons = 0
         for module in modules:
             count_of_lessons += ModuleRepository.get_count_lessons_of_module(module)
@@ -102,7 +102,7 @@ class PassingLessonService:
     def __init__(self, request):
         self.request = request
 
-    def get(self, course_slug, module_slug, lesson_slug):
+    def get(self, course_slug, module_slug, lesson_slug) -> dict:
         course = CourseRepository.get_by_slug(course_slug)
         user = UserRepository.get_from_request(self.request)
         is_available = check_available_course(user, course)
@@ -148,7 +148,7 @@ class PassingLessonService:
             "homework_part_completed_exercises": homework_part_completed_exercises,
         }
 
-    def get_user_completed_exercises_in_parts(self, user, parts):
+    def get_user_completed_exercises_in_parts(self, user, parts) -> list:
         completed_exercises = []
         for part in parts:
             completed_exercise = ExerciseRepository.get_user_completed_exercises(
@@ -157,12 +157,12 @@ class PassingLessonService:
             completed_exercises.append(completed_exercise)
         return completed_exercises
 
-    def get_context_data(self, first_part_of_context, second_part_of_context):
+    def get_context_data(self, first_part_of_context, second_part_of_context) -> dict:
         first_part_of_context.update(second_part_of_context)
         context = first_part_of_context
         return context
 
-    def post(self, course_slug, module_slug, lesson_slug):
+    def post(self, course_slug, module_slug) -> dict:
         user = UserRepository.get_from_request(self.request)
         answer_id = self.request.POST.get("answer_id", None)
         exercise_id = self.request.POST.get("exercises_id", None)
@@ -181,7 +181,7 @@ class PassingLessonService:
         self.update_passing_course(user, course_slug, module_slug, exercise)
         return {"success": True}
 
-    def check_correct(self, answer_id):
+    def check_correct(self, answer_id) -> bool:
         answer = AnswerRepository.get_by_id(answer_id)
         is_correct = AnswerRepository.check_correct(answer)
         if not is_correct:
@@ -194,7 +194,7 @@ class PassingLessonService:
             return False
         return True
 
-    def update_passing_course(self, user, course_slug, module_slug, exercise):
+    def update_passing_course(self, user, course_slug, module_slug, exercise) -> None:
         course = CourseRepository.get_by_slug(course_slug)
         module = ModuleRepository.get_by_slug(module_slug)
         lesson = LessonRepository.get_by_module(module)

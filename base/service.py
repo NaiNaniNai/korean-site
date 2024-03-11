@@ -52,7 +52,7 @@ class IndexPageService:
     def __init__(self, request):
         self.request = request
 
-    def get(self):
+    def get(self) -> dict:
         teachers = BaseRepository.get_all_teacher()
         return {
             "teachers": teachers,

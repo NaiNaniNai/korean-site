@@ -80,7 +80,7 @@ class UserRepository:
     @staticmethod
     def update_user_info(
         user: User, date_of_birth: date, last_name: str, first_name: str, avatar: str
-    ):
+    ) -> None:
         CustomUser.objects.update_or_create(
             username=user.username,
             defaults={
@@ -92,11 +92,11 @@ class UserRepository:
         )
 
     @staticmethod
-    def follow_user(user: User, profile: User):
+    def follow_user(user: User, profile: User) -> None:
         FollowingUsers.objects.create(user=user, following_users=profile)
 
     @staticmethod
-    def unfollow_user(user: User, profile: User):
+    def unfollow_user(user: User, profile: User) -> None:
         FollowingUsers.objects.filter(user=user, following_users=profile).delete()
 
     @staticmethod
@@ -104,6 +104,6 @@ class UserRepository:
         return CustomUser.objects.filter(username=username)
 
     @staticmethod
-    def change_password(user: User, new_password: str):
+    def change_password(user: User, new_password: str) -> None:
         user.set_password(new_password)
         user.save()

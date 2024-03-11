@@ -214,7 +214,7 @@ class ResetPasswordService:
             "form": self.form,
         }
 
-    def post(self):
+    def post(self) -> dict | None:
         (
             username,
             email,
@@ -228,7 +228,7 @@ class ResetPasswordService:
         if not is_authenticity:
             return self.get_context_data()
         self.change_password(user, new_password)
-        return
+        return None
 
     def get_info_from_request(self) -> tuple:
         username = self.request.POST.get("username")
@@ -265,7 +265,7 @@ class ResetPasswordService:
             return True
         return False
 
-    def change_password(self, user, new_password):
+    def change_password(self, user, new_password) -> None:
         UserRepository.change_password(user, new_password)
 
     def get_context_data(self) -> messages:

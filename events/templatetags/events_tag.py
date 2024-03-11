@@ -1,7 +1,6 @@
 from django import template
 
-
-from events.models import Events
+from events.service import EventsService
 
 register = template.Library()
 
@@ -10,6 +9,6 @@ register = template.Library()
 def get_events():
     """Output the events"""
 
-    events = Events.objects.all()
-    context = {"events": events}
+    service = EventsService()
+    context = service.get_all_events()
     return context
