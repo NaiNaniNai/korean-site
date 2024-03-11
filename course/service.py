@@ -153,7 +153,7 @@ class PassingLessonService:
         for part in parts:
             completed_exercise = ExerciseRepository.get_user_completed_exercises(
                 user, part
-            )
+            ).values_list("exercise", flat=True)
             completed_exercises.append(completed_exercise)
         return completed_exercises
 
