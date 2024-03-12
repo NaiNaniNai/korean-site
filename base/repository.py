@@ -2,6 +2,7 @@ from datetime import date, datetime
 
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
+from django.utils import timezone
 
 from account.models import OnlineUser, Teacher
 
@@ -28,3 +29,12 @@ class BaseRepository:
     @staticmethod
     def get_all_teacher() -> QuerySet[Teacher]:
         return Teacher.objects.all()
+
+
+class OnlineUserRepository:
+    """Class for interacting with online user model"""
+
+    @staticmethod
+    def delete_online_for_the_last_month() -> QuerySet[OnlineUser]:
+        current_month = timezone.localtime(timezone.now()).month
+        return OnlineUser.objects.filter(date__month__lt=current_month).delete()

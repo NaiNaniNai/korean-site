@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 
 from account.repository import UserRepository
-from base.repository import BaseRepository
+from base.repository import BaseRepository, OnlineUserRepository
 
 
 class UpdateLastOnlineService:
@@ -57,3 +57,11 @@ class IndexPageService:
         return {
             "teachers": teachers,
         }
+
+
+class OnlineService:
+    """Service for delete irrelevant online of users"""
+
+    def delete(self):
+        OnlineUserRepository.delete_online_for_the_last_month()
+        print("Done")
