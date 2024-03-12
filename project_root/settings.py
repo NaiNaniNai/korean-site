@@ -268,9 +268,11 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-
-REDIS_HOST = env("REDIS_HOST")
-REDIS_PORT = env("REDIS_PORT")
+if "DOCKER_ENV" in os.environ:
+    REDIS_HOST = "redis"
+else:
+    REDIS_HOST = "127.0.0.1"
+REDIS_PORT = "6379"
 CELERY_BROKER_URL = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
 CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": 3600}
 CELERY_RESULT_BACKEND = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
