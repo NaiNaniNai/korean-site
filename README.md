@@ -27,7 +27,7 @@ git clone https://github.com/NaiNaniNai/korean-site.git
     * `DB_PASSWORD` <- Пароль пользователя БД
     * `DEBUG=` <- Дебаг режим
     * `SECRET_KEY=` <- Секретный ключ проекта
-   Если вы хотите использовать другую базу данных воспользуйтесь [официальной документацией Django](https://docs.djangoproject.com/en/5.0/ref/settings/#databases).
+##### Если вы хотите использовать другую базу данных воспользуйтесь [официальной документацией Django](https://docs.djangoproject.com/en/5.0/ref/settings/#databases).
   * Выполните команду по сборке образа:
     ```console
     docker-compose build
